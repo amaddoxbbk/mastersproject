@@ -34,7 +34,7 @@ export const MainPage = () => {
     };
   
     try {
-      const res = await axios.post('http://localhost:3001/addAttendee', payload);
+        const res = await axios.post('/api/addUser', payload);
   
       if (res.status === 200) {
         console.log("Attendee added");
