@@ -7,7 +7,7 @@ import {
 import { Register } from "./Register";
 import { MainPage } from "./MainPage";
 import React from "react";
-import FetchData from "./FetchData";
+import FetchData from "./components/FetchData";
 
 function App() {
   return (

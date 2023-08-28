@@ -1,5 +1,5 @@
+// MainPage.tsx
 import React, { useState } from "react";
-import axios from "axios";
 import {
   Button,
   FormControl,
@@ -7,42 +7,48 @@ import {
   Input,
   List,
   ListItem,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
 } from "@chakra-ui/react";
+import { ReusableModal } from "./components/ReusableModal";
+import WriteData from "./components/WriteData";
 
 export const MainPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
+  const [plusOne, setPlusOne] = useState("");
   const [list, setList] = useState<string[]>([]);
+  const [shouldWriteData, setShouldWriteData] = useState(false);
 
   const onClose = () => setIsOpen(false);
 
-  const handleNameSubmit = async () => {
-    setList([...list, name]);
-    setName("");
-  
-    const payload = {
-      attendee: name,
-      plus_one: 'John', // Replace this with your logic
-    };
-  
-    try {
-        const res = await axios.post('/api/addUser', payload);
-  
-      if (res.status === 200) {
-        console.log("Attendee added");
-      }
-    } catch (error) {
-      console.error("There was an error adding the attendee", error);
-    }
+  const handleNameSubmit = () => {
+    setShouldWriteData(true);  // Set this flag true to indicate that data should be written
     onClose();
   };
+
+  const onSuccess = () => {
+    setList([...list, name]);  // Update the list only if the data write is successful
+    setName("");  // Clear the name
+    setPlusOne("");  // Clear the plus one
+    setShouldWriteData(false);  // Reset the flag
+  };
+
+  const onFailure = (error: any) => {
+    console.error("There was an error adding the attendee", error);
+    setShouldWriteData(false);  // Reset the flag
+  };
+
+  const form = (
+    <>
+      <FormControl>
+        <FormLabel>Name</FormLabel>
+        <Input value={name} onChange={(e) => setName(e.target.value)} />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Plus One</FormLabel>
+        <Input value={plusOne} onChange={(e) => setPlusOne(e.target.value)} />
+      </FormControl>
+    </>
+  );
 
   return (
     <>
@@ -52,24 +58,15 @@ export const MainPage = () => {
           <ListItem key={index}>{item}</ListItem>
         ))}
       </List>
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Form to add a new name</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <FormControl>
-              <FormLabel>Name</FormLabel>
-              <Input value={name} onChange={(e) => setName(e.target.value)} />
-            </FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={handleNameSubmit}>Submit</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <ReusableModal
+        isOpen={isOpen}
+        onClose={onClose}
+        title="New Attendee"
+        handleSubmit={handleNameSubmit}
+      >
+        {form}
+      </ReusableModal>
+      {shouldWriteData && <WriteData attendee={name} plusOne={plusOne} onSuccess={onSuccess} onFailure={onFailure} />}
     </>
   );
 };
-
