@@ -1,64 +1,87 @@
 import React, { useState } from 'react';
 import { Box, Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { ReusableModal } from './components/ReusableModal'; // Import ReusableModal
+import { ReusableModal } from './components/ReusableModal'; 
 
 export const Register = () => {
   const navigate = useNavigate();
 
-  // State variables for modals and party names
-  const [isOpen1, setIsOpen1] = useState(false);
-  const [partyName1, setPartyName1] = useState('');
-  const [isOpen2, setIsOpen2] = useState(false);
-  const [partyName2, setPartyName2] = useState('');
+  // State variables for modals and event details
+  const [isOpenNew, setIsOpenNew] = useState(false);
+  const [eventName, setEventName] = useState('');
+  const [eventDate, setEventDate] = useState('');
+  const [eventLocation, setEventLocation] = useState('');
 
-  // Functions to handle party name submissions
-  const handlePartyNameSubmit1 = () => {
-    // Your logic to handle the first party name
-    setIsOpen1(false);
+  // State variables for finding an existing event
+  const [isOpenFind, setIsOpenFind] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Function to handle new event submission
+  const handleNewEventSubmit = () => {
+    // Logic to handle the new event details
+    setIsOpenNew(false);
     navigate('/main');
   };
 
-  const handlePartyNameSubmit2 = () => {
-    // Your logic to handle the second party name
-    setIsOpen2(false);
+  // Function to handle finding an existing event
+  const handleFindEventSubmit = () => {
+    // Logic to handle the search query for finding an event
+    setIsOpenFind(false);
     navigate('/main');
   };
+
+  // Define the form for adding a new event
+  const newEventForm = (
+    <>
+      <FormControl>
+        <FormLabel>Event Name</FormLabel>
+        <Input value={eventName} onChange={(e) => setEventName(e.target.value)} />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Event Date</FormLabel>
+        <Input type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Event Location</FormLabel>
+        <Input value={eventLocation} onChange={(e) => setEventLocation(e.target.value)} />
+      </FormControl>
+    </>
+  );
+
+  // Define the form for finding an existing event
+  const findEventForm = (
+    <FormControl>
+      <FormLabel>Search for Event</FormLabel>
+      <Input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+    </FormControl>
+  );
 
   return (
     <Box p={8}>
-      <Button mt={4} onClick={() => setIsOpen1(true)}>
-        Open First Modal to Enter Party Name
+      <Button mt={4} onClick={() => setIsOpenNew(true)}>
+        Create New Event
       </Button>
 
-      <Button mt={4} ml={4} onClick={() => setIsOpen2(true)}>
-        Open Second Modal to Enter Party Name
+      <Button mt={4} ml={4} onClick={() => setIsOpenFind(true)}>
+        Find Existing Event
       </Button>
 
-      {/* Use ReusableModal for the first button */}
       <ReusableModal
-        isOpen={isOpen1}
-        onClose={() => setIsOpen1(false)}
-        title="Enter First Party Name"
-        handleSubmit={handlePartyNameSubmit1}
+        isOpen={isOpenNew}
+        onClose={() => setIsOpenNew(false)}
+        title="Create New Event"
+        handleSubmit={handleNewEventSubmit}
       >
-        <FormControl>
-          <FormLabel>Party Name</FormLabel>
-          <Input value={partyName1} onChange={(e) => setPartyName1(e.target.value)} />
-        </FormControl>
+        {newEventForm}
       </ReusableModal>
 
-      {/* Use ReusableModal for the second button */}
       <ReusableModal
-        isOpen={isOpen2}
-        onClose={() => setIsOpen2(false)}
-        title="Enter Second Party Name"
-        handleSubmit={handlePartyNameSubmit2}
+        isOpen={isOpenFind}
+        onClose={() => setIsOpenFind(false)}
+        title="Find Existing Event"
+        handleSubmit={handleFindEventSubmit}
       >
-        <FormControl>
-          <FormLabel>Party Name</FormLabel>
-          <Input value={partyName2} onChange={(e) => setPartyName2(e.target.value)} />
-        </FormControl>
+        {findEventForm}
       </ReusableModal>
     </Box>
   );
