@@ -15,7 +15,9 @@ export const Register = () => {
   const [maxSizeTopTable, setMaxSizeTopTable] = useState(0);
   const [numNormalTables, setNumNormalTables] = useState(0);
   const [maxSizeNormalTable, setMaxSizeNormalTable] = useState(0);
-  const [eventOptions, setEventOptions] = useState<{ value: string; label: string }[]>([]);
+  const [eventOptions, setEventOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
 
   const handleNewEventSubmit = (
     name: string,
@@ -26,6 +28,16 @@ export const Register = () => {
     numNormalTables: number,
     maxSizeNormalTable: number
   ) => {
+    // Extract the existing event names from eventOptions
+    const existingEventNames = eventOptions.map((option) => option.label);
+
+    // Check if event name already exists
+    if (existingEventNames.includes(name)) {
+      console.error("An event with this name already exists.");
+      // Show an error message to the user, can be a state-based UI message
+      return;
+    }
+
     setEventName(name);
     setEventDate(date);
     setEventLocation(location);
@@ -42,13 +54,16 @@ export const Register = () => {
   };
 
   useEffect(() => {
-    fetch('/api/getEvents')
-      .then(response => response.json())
+    fetch("/api/getEvents")
+      .then((response) => response.json())
       .then((data: any[]) => {
-        const fetchedEventOptions = data.map(event => ({ value: event.event_id, label: event.event_name }));
+        const fetchedEventOptions = data.map((event) => ({
+          value: event.event_id,
+          label: event.event_name,
+        }));
         setEventOptions(fetchedEventOptions);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("There was an error fetching the event names: ", error);
       });
   }, []);
@@ -56,8 +71,11 @@ export const Register = () => {
   return (
     <Box p={8}>
       <CreateNewEventButton handleNewEventSubmit={handleNewEventSubmit} />
-      <FindExistingEventButton handleFindEventSubmit={handleFindEventSubmit} eventOptions={eventOptions} />
-      
+      <FindExistingEventButton
+        handleFindEventSubmit={handleFindEventSubmit}
+        eventOptions={eventOptions}
+      />
+
       {shouldWriteData && (
         <WriteData
           endpoint="/api/addEvent" // Your API endpoint for adding a new event
