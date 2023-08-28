@@ -1,9 +1,18 @@
-import { Button } from '@chakra-ui/react'
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { Register } from './Register';
+import { MainPage } from './MainPage';
+import React from 'react';
 
-const App = () => {
+function App() {
   return (
-    <Button colorScheme="blue">Button</Button>
-  )
+    <Router>
+      <Routes>
+        <Route path="/register" element={<Register />} />
+        <Route path="/main" element={<MainPage />} />
+        <Route path="*" element={<Navigate to="/register" />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
