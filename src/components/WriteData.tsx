@@ -16,6 +16,7 @@ const WriteData: React.FC<WriteDataProps> = ({
   onFailure,
 }) => {
   React.useEffect(() => {
+    console.log("WriteData useEffect triggered: ", endpoint);
     axios
       .post(endpoint, payload)
       .then((res) => {
