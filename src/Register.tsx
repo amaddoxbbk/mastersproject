@@ -3,6 +3,8 @@ import { Box, Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { ReusableModal } from "./components/ReusableModal";
 import WriteData from "./components/WriteData"; // Step 1: Import WriteData
+import GenericDropdown from './components/GenericDropdown'; // or wherever GenericDropdown is located
+
 
 export const Register = () => {
   console.log("Register page");
@@ -74,13 +76,22 @@ export const Register = () => {
     </>
   );
 
+  const eventOptions = [
+    { value: 'event1', label: 'Event 1' },
+    { value: 'event2', label: 'Event 2' },
+    // Add more options as needed
+  ];
+  
+
   // Define the form for finding an existing event
   const findEventForm = (
     <FormControl>
       <FormLabel>Search for Event</FormLabel>
-      <Input
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
+      <GenericDropdown
+        onSelect={(value) => setSearchQuery(value)}
+        selectedValue={searchQuery}
+        options={eventOptions}
+        title="Select Event"
       />
     </FormControl>
   );
