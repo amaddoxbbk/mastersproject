@@ -3,26 +3,21 @@ import React from "react";
 import axios from "axios";
 
 interface WriteDataProps {
-  attendee: string;
-  plusOne: string;
+  endpoint: string;  // API endpoint
+  payload: Object;  // Data payload
   onSuccess: () => void;
   onFailure: (error: any) => void;
 }
 
 const WriteData: React.FC<WriteDataProps> = ({
-  attendee,
-  plusOne,
+  endpoint,
+  payload,
   onSuccess,
   onFailure,
 }) => {
   React.useEffect(() => {
-    const payload = {
-      attendee,
-      plus_one: plusOne,
-    };
-
     axios
-      .post("/api/addUser", payload)
+      .post(endpoint, payload)
       .then((res) => {
         if (res.status === 200) {
           onSuccess();
@@ -31,7 +26,7 @@ const WriteData: React.FC<WriteDataProps> = ({
       .catch((error) => {
         onFailure(error);
       });
-  }, [attendee, plusOne, onSuccess, onFailure]);
+  }, [endpoint, payload, onSuccess, onFailure]);
 
   return null;
 };

@@ -21,20 +21,21 @@ export const MainPage = () => {
   const onClose = () => setIsOpen(false);
 
   const handleNameSubmit = () => {
-    setShouldWriteData(true);  // Set this flag true to indicate that data should be written
+    console.log("Name: ", name);
+    setShouldWriteData(true); // Set this flag true to indicate that data should be written
     onClose();
   };
 
   const onSuccess = () => {
-    setList([...list, name]);  // Update the list only if the data write is successful
-    setName("");  // Clear the name
-    setPlusOne("");  // Clear the plus one
-    setShouldWriteData(false);  // Reset the flag
+    setList([...list, name]); // Update the list only if the data write is successful
+    setName(""); // Clear the name
+    setPlusOne(""); // Clear the plus one
+    setShouldWriteData(false); // Reset the flag
   };
 
   const onFailure = (error: any) => {
     console.error("There was an error adding the attendee", error);
-    setShouldWriteData(false);  // Reset the flag
+    setShouldWriteData(false); // Reset the flag
   };
 
   const form = (
@@ -43,6 +44,7 @@ export const MainPage = () => {
         <FormLabel>Name</FormLabel>
         <Input value={name} onChange={(e) => setName(e.target.value)} />
       </FormControl>
+
       <FormControl>
         <FormLabel>Plus One</FormLabel>
         <Input value={plusOne} onChange={(e) => setPlusOne(e.target.value)} />
@@ -66,7 +68,17 @@ export const MainPage = () => {
       >
         {form}
       </ReusableModal>
-      {shouldWriteData && <WriteData attendee={name} plusOne={plusOne} onSuccess={onSuccess} onFailure={onFailure} />}
+      {shouldWriteData && (
+        <WriteData
+          endpoint="/api/addUser"
+          payload={{ attendee: name, plus_one: plusOne }}
+          onSuccess={() => setShouldWriteData(false)}
+          onFailure={(error) => {
+            console.error("There was an error adding the attendee", error);
+            setShouldWriteData(false);
+          }}
+        />
+      )}{" "}
     </>
   );
 };
