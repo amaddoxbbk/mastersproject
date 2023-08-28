@@ -11,12 +11,6 @@ import FetchData from "./FetchData";
 
 function App() {
   return (
-    <>
-      <div>
-        <h1>Welcome to My App!</h1>
-        <FetchData />
-      </div>
-
       <Router>
         <Routes>
           <Route path="/register" element={<Register />} />
@@ -24,7 +18,6 @@ function App() {
           <Route path="*" element={<Navigate to="/register" />} />
         </Routes>
       </Router>
-    </>
   );
 }
 
