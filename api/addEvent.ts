@@ -9,14 +9,29 @@ const pool = new Pool({
   }
 });
 
-export default async (req: VercelRequest, res: VercelResponse) => {
-  const { event_name, event_date, event_location } = req.body;
+export default async (req: any, res: any) => { // Use 'any' type for req and res
+  const {
+    event_name,
+    event_date,
+    event_location,
+    numTopTables,
+    maxSizeTopTable,
+    numNormalTables,
+    maxSizeNormalTable,
+  } = req.body;
 
   try {
-    console.log("trying to add event_name: ", event_name);
     const result = await pool.query(
-      'INSERT INTO events (event_name, event_date, event_location) VALUES ($1, $2, $3) RETURNING *',
-      [event_name, event_date, event_location]
+      'INSERT INTO events (event_name, event_date, event_location, num_top_tables, size_top_tables, num_normal_tables, size_normal_tables) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [
+        event_name,
+        event_date,
+        event_location,
+        numTopTables,
+        maxSizeTopTable,
+        numNormalTables,
+        maxSizeNormalTable,
+      ]
     );
     res.status(200).json(result.rows[0]);
   } catch (error) {
@@ -24,3 +39,4 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+

@@ -3,14 +3,26 @@ import { Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import { ReusableModal } from './ReusableModal';
 
 interface CreateNewEventButtonProps {
-    handleNewEventSubmit: (eventName: string, eventDate: string, eventLocation: string) => void;
-  }
+  handleNewEventSubmit: (
+    eventName: string,
+    eventDate: string,
+    eventLocation: string,
+    numTopTables: number,
+    maxSizeTopTable: number,
+    numNormalTables: number,
+    maxSizeNormalTable: number
+  ) => void;
+}
 
-  export const CreateNewEventButton: React.FC<CreateNewEventButtonProps> = ({ handleNewEventSubmit }) => {
-    const [isOpenNew, setIsOpenNew] = useState(false);
+export const CreateNewEventButton: React.FC<CreateNewEventButtonProps> = ({ handleNewEventSubmit }) => {
+  const [isOpenNew, setIsOpenNew] = useState(false);
   const [eventName, setEventName] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [eventLocation, setEventLocation] = useState("");
+  const [numTopTables, setNumTopTables] = useState(0);
+  const [maxSizeTopTable, setMaxSizeTopTable] = useState(0);
+  const [numNormalTables, setNumNormalTables] = useState(0);
+  const [maxSizeNormalTable, setMaxSizeNormalTable] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
 
   const newEventForm = (
@@ -28,6 +40,22 @@ interface CreateNewEventButtonProps {
         <FormLabel>Event Location</FormLabel>
         <Input value={eventLocation} onChange={(e) => setEventLocation(e.target.value)} />
       </FormControl>
+      <FormControl>
+        <FormLabel>Number of Top Tables</FormLabel>
+        <Input type="number" value={numTopTables} onChange={(e) => setNumTopTables(parseInt(e.target.value))} />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Max Size of Top Table</FormLabel>
+        <Input type="number" value={maxSizeTopTable} onChange={(e) => setMaxSizeTopTable(parseInt(e.target.value))} />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Number of Normal Tables</FormLabel>
+        <Input type="number" value={numNormalTables} onChange={(e) => setNumNormalTables(parseInt(e.target.value))} />
+      </FormControl>
+      <FormControl>
+        <FormLabel>Max Size of Normal Table</FormLabel>
+        <Input type="number" value={maxSizeNormalTable} onChange={(e) => setMaxSizeNormalTable(parseInt(e.target.value))} />
+      </FormControl>
     </>
   );
 
@@ -40,7 +68,7 @@ interface CreateNewEventButtonProps {
         isOpen={isOpenNew}
         onClose={() => setIsOpenNew(false)}
         title="Create New Event"
-        handleSubmit={() => handleNewEventSubmit(eventName, eventDate, eventLocation)}
+        handleSubmit={() => handleNewEventSubmit(eventName, eventDate, eventLocation, numTopTables, maxSizeTopTable, numNormalTables, maxSizeNormalTable)}
       >
         {newEventForm}
       </ReusableModal>

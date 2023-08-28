@@ -11,12 +11,28 @@ export const Register = () => {
   const [eventName, setEventName] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [eventLocation, setEventLocation] = useState("");
+  const [numTopTables, setNumTopTables] = useState(0);
+  const [maxSizeTopTable, setMaxSizeTopTable] = useState(0);
+  const [numNormalTables, setNumNormalTables] = useState(0);
+  const [maxSizeNormalTable, setMaxSizeNormalTable] = useState(0);
   const [eventOptions, setEventOptions] = useState<{ value: string; label: string }[]>([]);
 
-  const handleNewEventSubmit = (name: string, date: string, location: string) => {
+  const handleNewEventSubmit = (
+    name: string,
+    date: string,
+    location: string,
+    numTopTables: number,
+    maxSizeTopTable: number,
+    numNormalTables: number,
+    maxSizeNormalTable: number
+  ) => {
     setEventName(name);
     setEventDate(date);
     setEventLocation(location);
+    setNumTopTables(numTopTables);
+    setMaxSizeTopTable(maxSizeTopTable);
+    setNumNormalTables(numNormalTables);
+    setMaxSizeNormalTable(maxSizeNormalTable);
     setShouldWriteData(true);
   };
 
@@ -49,6 +65,10 @@ export const Register = () => {
             event_name: eventName,
             event_date: eventDate,
             event_location: eventLocation,
+            numTopTables: numTopTables,
+            maxSizeTopTable: maxSizeTopTable,
+            numNormalTables: numNormalTables,
+            maxSizeNormalTable: maxSizeNormalTable,
           }}
           onSuccess={() => {
             console.log("Event added successfully");
