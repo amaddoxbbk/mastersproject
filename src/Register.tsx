@@ -45,7 +45,7 @@ export const Register = () => {
     fetch('/api/getEvents')
       .then(response => response.json())
       .then((data: any[]) => {
-        const fetchedEventOptions = data.map(event => ({ value: event.id, label: event.event_name }));
+        const fetchedEventOptions = data.map(event => ({ value: event.event_id, label: event.event_name }));
         setEventOptions(fetchedEventOptions);
       })
       .catch(error => {

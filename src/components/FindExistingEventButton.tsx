@@ -6,17 +6,25 @@ import GenericDropdown from './GenericDropdown';
 interface FindExistingEventButtonProps {
     handleFindEventSubmit: (searchQuery: string) => void;
     eventOptions: { value: string; label: string }[];
-  }
+}
 
-  export const FindExistingEventButton: React.FC<FindExistingEventButtonProps> = ({ handleFindEventSubmit, eventOptions }) => {
-    const [isOpenFind, setIsOpenFind] = useState(false);
+export const FindExistingEventButton: React.FC<FindExistingEventButtonProps> = ({ handleFindEventSubmit, eventOptions }) => {
+  console.log("FindExistingEventButton rendered");
+  console.log("eventOptions: ", eventOptions);
+
+  const [isOpenFind, setIsOpenFind] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const onSelectDropdown = (value: string) => {
+    console.log("Dropdown onSelect called with value: ", value);
+    setSearchQuery(value);
+  };
 
   const findEventForm = (
     <FormControl>
       <FormLabel>Search for Event</FormLabel>
       <GenericDropdown
-        onSelect={(value) => setSearchQuery(value)}
+        onSelect={onSelectDropdown}
         selectedValue={searchQuery}
         options={eventOptions}
         title="Select Event"

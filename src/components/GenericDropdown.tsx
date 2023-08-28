@@ -14,6 +14,8 @@ interface DropdownProps {
 }
 
 const GenericDropdown = ({ onSelect, selectedValue, options, title }: DropdownProps) => {
+  console.log("Options Array: ", options); // Log entire options array
+
   const currentOption = options.find(option => option.value === selectedValue);
 
   return (
@@ -22,10 +24,17 @@ const GenericDropdown = ({ onSelect, selectedValue, options, title }: DropdownPr
         {title}: {currentOption?.label || "Select"}
       </MenuButton>
       <MenuList>
-        {options.map((option) => (
+        {options.map((option, index) => (
           <MenuItem 
-            key={option.value} 
-            onClick={() => onSelect(option.value)}>
+            key={option.value || index} // Use index as a fallback
+            onClick={(event) => {
+              console.log("Event object: ", event);
+              console.log("Clicked index: ", index);
+              console.log("Clicked option value: ", option.value);
+              console.log("Clicked option label: ", option.label);
+              onSelect(option.value);
+            }}
+          >
             {option.label}
           </MenuItem>
         ))}
