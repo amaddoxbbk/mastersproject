@@ -12,9 +12,10 @@ interface CreateNewEventButtonProps {
     numNormalTables: number,
     maxSizeNormalTable: number
   ) => void;
+  eventOptions: { value: string; label: string }[]; // Additional prop for the list of existing events
 }
 
-export const CreateNewEventButton: React.FC<CreateNewEventButtonProps> = ({ handleNewEventSubmit }) => {
+export const CreateNewEventButton: React.FC<CreateNewEventButtonProps> = ({ handleNewEventSubmit, eventOptions }) => {
   const [isOpenNew, setIsOpenNew] = useState(false);
   const [eventName, setEventName] = useState("");
   const [eventDate, setEventDate] = useState("");
@@ -24,6 +25,23 @@ export const CreateNewEventButton: React.FC<CreateNewEventButtonProps> = ({ hand
   const [numNormalTables, setNumNormalTables] = useState(0);
   const [maxSizeNormalTable, setMaxSizeNormalTable] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const handleSubmit = () => {
+    if (!eventName || !eventDate || !eventLocation || numTopTables < 0 || maxSizeTopTable < 0 || numNormalTables < 0 || maxSizeNormalTable < 0) {
+      setErrorMessage("All fields must be completed.");
+      return;
+    }
+  
+    if (eventOptions.some(option => option.label === eventName)) {
+      setErrorMessage("An event with this name already exists.");
+      return;
+    }
+  
+    handleNewEventSubmit(eventName, eventDate, eventLocation, numTopTables, maxSizeTopTable, numNormalTables, maxSizeNormalTable);
+    setIsOpenNew(false);
+    setErrorMessage(""); // Clear any existing error messages
+  };
+  
 
   const newEventForm = (
     <>
@@ -68,7 +86,7 @@ export const CreateNewEventButton: React.FC<CreateNewEventButtonProps> = ({ hand
         isOpen={isOpenNew}
         onClose={() => setIsOpenNew(false)}
         title="Create New Event"
-        handleSubmit={() => handleNewEventSubmit(eventName, eventDate, eventLocation, numTopTables, maxSizeTopTable, numNormalTables, maxSizeNormalTable)}
+        handleSubmit={handleSubmit} // Use the new handleSubmit function
       >
         {newEventForm}
       </ReusableModal>

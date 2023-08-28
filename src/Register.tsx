@@ -70,7 +70,7 @@ export const Register = () => {
 
   return (
     <Box p={8}>
-      <CreateNewEventButton handleNewEventSubmit={handleNewEventSubmit} />
+<CreateNewEventButton handleNewEventSubmit={handleNewEventSubmit} eventOptions={eventOptions} />
       <FindExistingEventButton
         handleFindEventSubmit={handleFindEventSubmit}
         eventOptions={eventOptions}
