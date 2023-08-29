@@ -51,6 +51,7 @@ export const Register = () => {
   const handleFindEventSubmit = (searchQuery: string) => {
     // Logic for finding an event by searchQuery
     console.log("Finding event: ", searchQuery);
+    navigate("/main"); // Navigate to the main page
   };
 
   useEffect(() => {
