@@ -1,4 +1,3 @@
-// MainPage.tsx
 import React, { useState } from "react";
 import {
   Button,
@@ -7,11 +6,16 @@ import {
   Input,
   List,
   ListItem,
+  Box,
 } from "@chakra-ui/react";
 import { ReusableModal } from "./components/ReusableModal";
 import WriteData from "./components/WriteData";
+import { useEvent } from "./components/EventContext"; // Import the context hook
 
 export const MainPage = () => {
+  const { eventData } = useEvent(); // Use the context hook to get eventData
+  const eventName = eventData.event_name || "Unknown Event"; // Get the event name or default to "Unknown Event"
+
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
   const [plusOne, setPlusOne] = useState("");
@@ -53,7 +57,8 @@ export const MainPage = () => {
   );
 
   return (
-    <>
+    <Box p={8}>
+      <h1>Welcome to {eventName}</h1>
       <Button onClick={() => setIsOpen(true)}>Add Name</Button>
       <List mt={4}>
         {list.map((item, index) => (
@@ -72,13 +77,10 @@ export const MainPage = () => {
         <WriteData
           endpoint="/api/addUser"
           payload={{ attendee: name, plus_one: plusOne }}
-          onSuccess={() => setShouldWriteData(false)}
-          onFailure={(error) => {
-            console.error("There was an error adding the attendee", error);
-            setShouldWriteData(false);
-          }}
+          onSuccess={onSuccess}
+          onFailure={onFailure}
         />
-      )}{" "}
-    </>
+      )}
+    </Box>
   );
 };

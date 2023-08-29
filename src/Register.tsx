@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import WriteData from "./components/WriteData";
 import { CreateNewEventButton } from "./components/CreateNewEventButton";
 import { FindExistingEventButton } from "./components/FindExistingEventButton";
+import { useEvent } from "./components/EventContext";
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ export const Register = () => {
   const [eventOptions, setEventOptions] = useState<
     { value: string; label: string }[]
   >([]);
+  const { setEventData } = useEvent();
 
   const handleNewEventSubmit = (
     name: string,
@@ -46,12 +48,32 @@ export const Register = () => {
     setNumNormalTables(numNormalTables);
     setMaxSizeNormalTable(maxSizeNormalTable);
     setShouldWriteData(true);
+
+    // Update EventContext
+    setEventData({ event_name: name });
+
+    // Debugging log to ensure EventContext is updated
+    console.log("EventContext updated with new event data:", {
+      event_name: name,
+    });
   };
 
   const handleFindEventSubmit = (searchQuery: string) => {
-    // Logic for finding an event by searchQuery
-    console.log("Finding event: ", searchQuery);
-    navigate("/main"); // Navigate to the main page
+    const selectedEvent = eventOptions.find(
+      (option) => option.value === searchQuery
+    );
+
+    if (selectedEvent) {
+      setEventData({ event_name: selectedEvent.label });
+      console.log("Selected event data:", selectedEvent);
+      console.log("Updated event context:", {
+        event_name: selectedEvent.label,
+      });
+      navigate("/main"); // Navigate to the main page
+    } else {
+      console.error("Please select an event");
+      // Show an error message to the user, can be a state-based UI message
+    }
   };
 
   useEffect(() => {
@@ -71,7 +93,10 @@ export const Register = () => {
 
   return (
     <Box p={8}>
-<CreateNewEventButton handleNewEventSubmit={handleNewEventSubmit} eventOptions={eventOptions} />
+      <CreateNewEventButton
+        handleNewEventSubmit={handleNewEventSubmit}
+        eventOptions={eventOptions}
+      />
       <FindExistingEventButton
         handleFindEventSubmit={handleFindEventSubmit}
         eventOptions={eventOptions}

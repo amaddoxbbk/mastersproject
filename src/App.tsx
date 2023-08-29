@@ -6,11 +6,11 @@ import {
 } from "react-router-dom";
 import { Register } from "./Register";
 import { MainPage } from "./MainPage";
-import React from "react";
-import FetchData from "./components/FetchData";
+import { EventProvider } from "./components/EventContext";
 
 function App() {
   return (
+    <EventProvider>
       <Router>
         <Routes>
           <Route path="/register" element={<Register />} />
@@ -18,6 +18,7 @@ function App() {
           <Route path="*" element={<Navigate to="/register" />} />
         </Routes>
       </Router>
+    </EventProvider>
   );
 }
 
