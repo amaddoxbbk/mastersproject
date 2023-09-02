@@ -12,14 +12,25 @@ import { useEvent } from "./EventContext";
 import GenericDropdown from "./GenericDropdown";
 import { z } from "zod"; // Import Zod
 
+const relationshipOptions = [
+  { value: "family_of_bride", label: "Family of Bride" },
+  { value: "friends_of_bride", label: "Friends of Bride" },
+  { value: "family_of_groom", label: "Family of Groom" },
+  { value: "friends_of_groom", label: "Friends of Groom" },
+];
+
 // Define Zod schema
 const newGuestSchema = z.object({
   name: z.string().min(3, "Guest name is required"),
-  plusOne: z.string().optional().refine(value => value === undefined || value.length >= 3, {
+  plusOne: z
+  .string()
+  .optional()
+  .refine((value) => value === undefined || value === "" || value.length >= 3, {
     message: "Plus One name must be at least 3 characters long",
   }),
-  relationship: z.string().optional(),
-  specialStatus: z.string().optional(),
+
+    relationship: z.enum(["family_of_bride", "friends_of_bride", "family_of_groom", "friends_of_groom"]),
+    specialStatus: z.string().optional(),
   isBride: z.boolean(),
   isGroom: z.boolean(),
 });
@@ -87,7 +98,11 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
     if (!parsedData.success) {
       const errors: { [key: string]: string } = {};
       parsedData.error.issues.forEach((issue) => {
-        errors[issue.path[0]] = issue.message;
+        if (issue.path[0] === 'relationship' && issue.code === 'invalid_enum_value') {
+          errors[issue.path[0]] = 'Please select a relationship';
+        } else {
+          errors[issue.path[0]] = issue.message;
+        }
       });
       setFieldErrors(errors);
       return;
@@ -121,18 +136,28 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
   const form = (
     <>
       <FormControl>
-        {fieldErrors.name && <div style={{ color: "red" }}>{fieldErrors.name}</div>}
+        {fieldErrors.name && (
+          <div style={{ color: "red" }}>{fieldErrors.name}</div>
+        )}
         <FormLabel>Guest Name</FormLabel>
         <Input value={name} onChange={(e) => setName(e.target.value)} />
       </FormControl>
       <FormControl>
-  {fieldErrors.plusOne && <div style={{ color: "red" }}>{fieldErrors.plusOne}</div>}
-  <FormLabel>Plus One</FormLabel>
-  <Input value={plusOne} onChange={(e) => setPlusOne(e.target.value)} />
-</FormControl>
+        {fieldErrors.plusOne && (
+          <div style={{ color: "red" }}>{fieldErrors.plusOne}</div>
+        )}
+        <FormLabel>Plus One</FormLabel>
+        <Input value={plusOne} onChange={(e) => setPlusOne(e.target.value)} />
+      </FormControl>
       <FormControl>
+      {fieldErrors.relationship && <div style={{ color: "red" }}>{fieldErrors.relationship}</div>}
         <FormLabel>Relationship</FormLabel>
-        <Input value={relationship} onChange={(e) => setRelationship(e.target.value)} />
+        <GenericDropdown
+          onSelect={(value) => setRelationship(value)}
+          selectedValue={relationship}
+          options={relationshipOptions}
+          title="Relationship"
+        />
       </FormControl>
       <FormControl>
         <FormLabel>Blacklist Attendee IDs</FormLabel>
@@ -161,15 +186,24 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
       </FormControl>
       <FormControl>
         <FormLabel>Special Status</FormLabel>
-        <Input value={specialStatus} onChange={(e) => setSpecialStatus(e.target.value)} />
+        <Input
+          value={specialStatus}
+          onChange={(e) => setSpecialStatus(e.target.value)}
+        />
       </FormControl>
       <FormControl>
-        <Checkbox isChecked={isBride} onChange={(e) => setIsBride(e.target.checked)}>
+        <Checkbox
+          isChecked={isBride}
+          onChange={(e) => setIsBride(e.target.checked)}
+        >
           Is Bride
         </Checkbox>
       </FormControl>
       <FormControl>
-        <Checkbox isChecked={isGroom} onChange={(e) => setIsGroom(e.target.checked)}>
+        <Checkbox
+          isChecked={isGroom}
+          onChange={(e) => setIsGroom(e.target.checked)}
+        >
           Is Groom
         </Checkbox>
       </FormControl>
