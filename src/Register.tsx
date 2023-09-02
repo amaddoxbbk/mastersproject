@@ -30,17 +30,25 @@ export const Register = () => {
     numNormalTables: number,
     maxSizeNormalTable: number
   ) => {
-    // ... (rest of your code)
+        // Extract the existing event names from eventOptions
+        const existingEventNames = eventOptions.map((option) => option.label);
 
-    // Update EventContext
-    // Assuming newEventId is the id of the newly created event
-    setEventData({ event_name: name }); // <-- Update this line to include event_id when you have it
+        // Check if event name already exists
+        if (existingEventNames.includes(name)) {
+          console.error("An event with this name already exists.");
+          // Show an error message to the user, can be a state-based UI message
+          return;
+        }
+    
+        setEventName(name);
+        setEventDate(date);
+        setEventLocation(location);
+        setNumTopTables(numTopTables);
+        setMaxSizeTopTable(maxSizeTopTable);
+        setNumNormalTables(numNormalTables);
+        setMaxSizeNormalTable(maxSizeNormalTable);
+        setShouldWriteData(true);
 
-    // Debugging log to ensure EventContext is updated
-    console.log("EventContext updated with new event data:", {
-      event_name: name,
-      // event_id: newEventId,  // <-- Update this line when you have newEventId
-    });
   };
 
   const handleFindEventSubmit = (searchQuery: string) => {
@@ -94,7 +102,7 @@ export const Register = () => {
 
       {shouldWriteData && (
         <WriteData
-          endpoint="/api/addEvents" // Your API endpoint for adding a new event
+          endpoint="/api/addEvent" // Your API endpoint for adding a new event
           payload={{
             event_name: eventName,
             event_date: eventDate,
