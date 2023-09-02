@@ -1,8 +1,15 @@
-// EventContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import axios from "axios";
 
 interface EventData {
   event_name?: string;
+  event_id?: number;
   // add more fields as needed
 }
 
@@ -27,6 +34,17 @@ export const useEvent = (): EventContextProps => {
 
 export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
   const [eventData, setEventData] = useState<EventData>({});
+
+  useEffect(() => {
+    axios
+      .get("/api/getEvents")
+      .then((response) => {
+        setEventData(response.data[0]);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the event data", error);
+      });
+  }, []);
 
   return (
     <EventContext.Provider value={{ eventData, setEventData }}>

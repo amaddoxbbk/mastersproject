@@ -15,7 +15,7 @@ export const MainPage = () => {
   return (
     <Box p={8}>
       <h1>Welcome to {eventName}</h1>
-      <AddGuestButton addGuestToList={addGuestToList} /> 
+      <AddGuestButton addGuestToList={addGuestToList} />
       <List mt={4}>
         {list.map((item, index) => (
           <ListItem key={index}>{item}</ListItem>

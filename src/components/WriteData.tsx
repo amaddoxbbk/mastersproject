@@ -3,8 +3,8 @@ import React from "react";
 import axios from "axios";
 
 interface WriteDataProps {
-  endpoint: string;  // API endpoint
-  payload: Object;  // Data payload
+  endpoint: string;
+  payload: Object;
   onSuccess: () => void;
   onFailure: (error: any) => void;
 }

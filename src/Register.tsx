@@ -30,31 +30,16 @@ export const Register = () => {
     numNormalTables: number,
     maxSizeNormalTable: number
   ) => {
-    // Extract the existing event names from eventOptions
-    const existingEventNames = eventOptions.map((option) => option.label);
-
-    // Check if event name already exists
-    if (existingEventNames.includes(name)) {
-      console.error("An event with this name already exists.");
-      // Show an error message to the user, can be a state-based UI message
-      return;
-    }
-
-    setEventName(name);
-    setEventDate(date);
-    setEventLocation(location);
-    setNumTopTables(numTopTables);
-    setMaxSizeTopTable(maxSizeTopTable);
-    setNumNormalTables(numNormalTables);
-    setMaxSizeNormalTable(maxSizeNormalTable);
-    setShouldWriteData(true);
+    // ... (rest of your code)
 
     // Update EventContext
-    setEventData({ event_name: name });
+    // Assuming newEventId is the id of the newly created event
+    setEventData({ event_name: name }); // <-- Update this line to include event_id when you have it
 
     // Debugging log to ensure EventContext is updated
     console.log("EventContext updated with new event data:", {
       event_name: name,
+      // event_id: newEventId,  // <-- Update this line when you have newEventId
     });
   };
 
@@ -64,15 +49,20 @@ export const Register = () => {
     );
 
     if (selectedEvent) {
-      setEventData({ event_name: selectedEvent.label });
+      // Update EventContext
+      setEventData({
+        event_name: selectedEvent.label,
+        event_id: parseInt(selectedEvent.value),
+      }); // <-- Update this line
+
       console.log("Selected event data:", selectedEvent);
       console.log("Updated event context:", {
         event_name: selectedEvent.label,
+        event_id: parseInt(selectedEvent.value), // <-- Update this line
       });
       navigate("/main"); // Navigate to the main page
     } else {
-      console.error("Please select an event");
-      // Show an error message to the user, can be a state-based UI message
+      // ... (rest of your code)
     }
   };
 
@@ -81,7 +71,7 @@ export const Register = () => {
       .then((response) => response.json())
       .then((data: any[]) => {
         const fetchedEventOptions = data.map((event) => ({
-          value: event.event_id,
+          value: event.event_id.toString(),
           label: event.event_name,
         }));
         setEventOptions(fetchedEventOptions);
@@ -104,7 +94,7 @@ export const Register = () => {
 
       {shouldWriteData && (
         <WriteData
-          endpoint="/api/addEvent" // Your API endpoint for adding a new event
+          endpoint="/api/addEvents" // Your API endpoint for adding a new event
           payload={{
             event_name: eventName,
             event_date: eventDate,
