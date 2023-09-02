@@ -8,7 +8,7 @@ interface Option {
 
 interface DropdownProps {
   onSelect: (value: string) => void;
-  selectedValue: string;
+  selectedValue: string | string[];
   options: Option[];
   title: string;
 }

@@ -39,7 +39,7 @@ export const MainPage = () => {
     <Box p={8}>
       <h1>Welcome to {eventData.event_name}</h1>
       <h2>Event ID: {eventData.event_id}</h2>
-      <AddGuestButton addGuestToList={addGuestToList} />
+      <AddGuestButton addGuestToList={addGuestToList} guests={guests} />
       <List mt={4}>
         {isLoading ? (
           <ListItem>Loading...</ListItem>
