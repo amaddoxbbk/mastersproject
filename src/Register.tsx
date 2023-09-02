@@ -19,7 +19,12 @@ export const Register = () => {
   const [eventOptions, setEventOptions] = useState<
     { value: string; label: string }[]
   >([]);
-  const { setEventData } = useEvent();
+  const { eventData, setEventData } = useEvent();
+
+  useEffect(() => {
+    console.log("Updated event context:", eventData);
+  }, [eventData]);
+
 
   const handleNewEventSubmit = (
     name: string,
@@ -70,7 +75,7 @@ export const Register = () => {
       });
       navigate("/main"); // Navigate to the main page
     } else {
-      // ... (rest of your code)
+      console.error("No matching event found for the given query.");
     }
   };
 
@@ -112,11 +117,19 @@ export const Register = () => {
             numNormalTables: numNormalTables,
             maxSizeNormalTable: maxSizeNormalTable,
           }}
-          onSuccess={() => {
-            console.log("Event added successfully");
-            setShouldWriteData(false); // Reset the trigger
-            navigate("/main"); // Navigate to the main page
+          onSuccess={(data) => {
+            console.log("Event added successfully", data);
+            setEventData({
+              event_name: eventName,
+              event_id: data.event_id,
+            });
+            console.log("Event Name:", eventData.event_name);
+console.log("Event ID:", eventData.event_id);
+
+            setShouldWriteData(false);
+            navigate("/main");
           }}
+          
           onFailure={(error) => {
             console.error("There was an error adding the event", error);
             setShouldWriteData(false); // Reset the trigger

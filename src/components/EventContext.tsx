@@ -39,7 +39,7 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
     axios
       .get("/api/getEvents")
       .then((response) => {
-        setEventData(response.data[0]);
+        setEventData({ event_name: "Default Event", event_id: 0 });
       })
       .catch((error) => {
         console.error("There was an error fetching the event data", error);

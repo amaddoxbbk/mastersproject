@@ -5,7 +5,7 @@ import axios from "axios";
 interface WriteDataProps {
   endpoint: string;
   payload: Object;
-  onSuccess: () => void;
+  onSuccess: (data?: any) => void;
   onFailure: (error: any) => void;
 }
 
@@ -21,7 +21,7 @@ const WriteData: React.FC<WriteDataProps> = ({
       .post(endpoint, payload)
       .then((res) => {
         if (res.status === 200) {
-          onSuccess();
+          onSuccess(res.data);
         }
       })
       .catch((error) => {
