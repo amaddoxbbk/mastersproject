@@ -5,7 +5,6 @@ import { useEvent } from "./components/EventContext";
 
 export const MainPage = () => {
   const { eventData } = useEvent();
-  const eventName = eventData.event_name || "Unknown Event";
   const [list, setList] = useState<string[]>([]);
 
   const addGuestToList = (name: string) => {
@@ -14,7 +13,8 @@ export const MainPage = () => {
 
   return (
     <Box p={8}>
-      <h1>Welcome to {eventName}</h1>
+      <h1>Welcome to {eventData.event_name}</h1>
+      <h2>Event ID: {eventData.event_id}</h2>
       <AddGuestButton addGuestToList={addGuestToList} />
       <List mt={4}>
         {list.map((item, index) => (
