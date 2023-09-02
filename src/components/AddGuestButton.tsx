@@ -5,21 +5,33 @@ import {
   FormLabel,
   Input,
   Checkbox,
-  Select,
 } from "@chakra-ui/react";
 import { ReusableModal } from "./ReusableModal";
 import WriteData from "./WriteData";
 import { useEvent } from "./EventContext";
 import GenericDropdown from "./GenericDropdown";
+import { z } from "zod"; // Import Zod
+
+// Define Zod schema
+const newGuestSchema = z.object({
+  name: z.string().min(3, "Guest name is required"),
+  plusOne: z.string().optional().refine(value => value === undefined || value.length >= 3, {
+    message: "Plus One name must be at least 3 characters long",
+  }),
+  relationship: z.string().optional(),
+  specialStatus: z.string().optional(),
+  isBride: z.boolean(),
+  isGroom: z.boolean(),
+});
 
 interface AddGuestButtonProps {
   addGuestToList: (name: string) => void;
-  guests: any[]; // Add this line to accept the list of guests
+  guests: any[];
 }
 
 export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
   addGuestToList,
-  guests, // Add this line to destructure the guests prop
+  guests,
 }) => {
   const { eventData } = useEvent();
   const eventId = eventData.event_id;
@@ -37,7 +49,8 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
   const [isBride, setIsBride] = useState(false);
   const [isGroom, setIsGroom] = useState(false);
   const [shouldWriteData, setShouldWriteData] = useState(false);
-  const [selectedBlacklist, setSelectedBlacklist] = useState<string[]>([]); // New state for selected blacklist IDs
+  const [selectedBlacklist, setSelectedBlacklist] = useState<string[]>([]);
+  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
 
   const handleBlacklistChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOptions = Array.from(e.target.selectedOptions).map(
@@ -47,28 +60,44 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
   };
 
   const handleSelect = (value: string) => {
-    console.log("handleSelect triggered with value:", value); // Debugging line
     if (selectedBlacklist.includes(value)) {
       setSelectedBlacklist(selectedBlacklist.filter((item) => item !== value));
     } else {
       setSelectedBlacklist([...selectedBlacklist, value]);
     }
   };
-  
-  const options = guests
-  .filter((guest) => guest.attendee_name && guest.attendee_name.trim() !== "")
-  .map((guest) => ({
-    value: guest.attendee_id,
-    label: guest.attendee_name,
-  }));
 
+  const options = guests
+    .filter((guest) => guest.attendee_name && guest.attendee_name.trim() !== "")
+    .map((guest) => ({
+      value: guest.attendee_id,
+      label: guest.attendee_name,
+    }));
 
   const handleGuestSubmit = () => {
-    console.log("Submitting guest with event ID:", eventId);
+    const parsedData = newGuestSchema.safeParse({
+      name,
+      plusOne,
+      relationship,
+      specialStatus,
+      isBride,
+      isGroom,
+    });
+
+    if (!parsedData.success) {
+      const errors: { [key: string]: string } = {};
+      parsedData.error.issues.forEach((issue) => {
+        errors[issue.path[0]] = issue.message;
+      });
+      setFieldErrors(errors);
+      return;
+    }
+
     if (eventId === undefined) {
       console.error("Event ID is undefined. Aborting submit.");
       return;
     }
+
     setShouldWriteData(true);
     setIsOpen(false);
   };
@@ -92,70 +121,55 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
   const form = (
     <>
       <FormControl>
+        {fieldErrors.name && <div style={{ color: "red" }}>{fieldErrors.name}</div>}
         <FormLabel>Guest Name</FormLabel>
         <Input value={name} onChange={(e) => setName(e.target.value)} />
       </FormControl>
       <FormControl>
-        <FormLabel>Plus One</FormLabel>
-        <Input value={plusOne} onChange={(e) => setPlusOne(e.target.value)} />
-      </FormControl>
+  {fieldErrors.plusOne && <div style={{ color: "red" }}>{fieldErrors.plusOne}</div>}
+  <FormLabel>Plus One</FormLabel>
+  <Input value={plusOne} onChange={(e) => setPlusOne(e.target.value)} />
+</FormControl>
       <FormControl>
         <FormLabel>Relationship</FormLabel>
-        <Input
-          value={relationship}
-          onChange={(e) => setRelationship(e.target.value)}
-        />
-
+        <Input value={relationship} onChange={(e) => setRelationship(e.target.value)} />
       </FormControl>
-
       <FormControl>
-  <FormLabel>Blacklist Attendee IDs</FormLabel>
-  {guests && guests.length > 0 ? (
-    <>
-      <GenericDropdown
-        onSelect={handleSelect}
-        selectedValue={selectedBlacklist}
-        options={options}
-        title="Blacklist"
-      />
-      {/* Conditionally render the list of blacklisted guests */}
-      {selectedBlacklist.length > 0 && (
-        <div>
-          <h3>Blacklisted Guests:</h3>
-          <ul>
-            {selectedBlacklist.map((id, index) => (
-              <li key={index}>{getBlacklistNameById(id)}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </>
-  ) : (
-    <p>No guests available for blacklist.</p>
-  )}
-</FormControl>
-
-
+        <FormLabel>Blacklist Attendee IDs</FormLabel>
+        {guests && guests.length > 0 ? (
+          <>
+            <GenericDropdown
+              onSelect={handleSelect}
+              selectedValue={selectedBlacklist}
+              options={options}
+              title="Blacklist"
+            />
+            {selectedBlacklist.length > 0 && (
+              <div>
+                <h3>Blacklisted Guests:</h3>
+                <ul>
+                  {selectedBlacklist.map((id, index) => (
+                    <li key={index}>{getBlacklistNameById(id)}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </>
+        ) : (
+          <p>No guests available for blacklist.</p>
+        )}
+      </FormControl>
       <FormControl>
         <FormLabel>Special Status</FormLabel>
-        <Input
-          value={specialStatus}
-          onChange={(e) => setSpecialStatus(e.target.value)}
-        />
+        <Input value={specialStatus} onChange={(e) => setSpecialStatus(e.target.value)} />
       </FormControl>
       <FormControl>
-        <Checkbox
-          isChecked={isBride}
-          onChange={(e) => setIsBride(e.target.checked)}
-        >
+        <Checkbox isChecked={isBride} onChange={(e) => setIsBride(e.target.checked)}>
           Is Bride
         </Checkbox>
       </FormControl>
       <FormControl>
-        <Checkbox
-          isChecked={isGroom}
-          onChange={(e) => setIsGroom(e.target.checked)}
-        >
+        <Checkbox isChecked={isGroom} onChange={(e) => setIsGroom(e.target.checked)}>
           Is Groom
         </Checkbox>
       </FormControl>
@@ -181,8 +195,8 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
             attendee_name: name,
             plus_one_name: plusOne,
             relationship,
-            blacklist_attendee_ids: selectedBlacklist, // Changed this line
-            blacklist_attendee_names: getBlacklistNames(), // New line
+            blacklist_attendee_ids: selectedBlacklist,
+            blacklist_attendee_names: getBlacklistNames(),
             special_status: specialStatus,
             is_bride: isBride,
             is_groom: isGroom,
