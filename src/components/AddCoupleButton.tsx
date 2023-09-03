@@ -243,7 +243,6 @@ export const AddCoupleButton: React.FC<AddCoupleButtonProps> = ({
           />
         </>
       )}
-      ;
     </>
   );
 };
