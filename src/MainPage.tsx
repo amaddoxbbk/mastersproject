@@ -4,6 +4,7 @@ import { AddGuestButton } from "./components/AddGuestButton";
 import { AddCoupleButton } from "./components/AddCoupleButton";
 import { useEvent } from "./components/EventContext";
 import axios from "axios";
+import { RemoveGuestButton } from "./components/RemoveGuestButton";
 
 export const MainPage = () => {
   const { eventData } = useEvent();
@@ -37,6 +38,7 @@ export const MainPage = () => {
       <h2>Event ID: {eventData.event_id}</h2>
       <AddGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
       <AddCoupleButton setShouldRefetch={setShouldRefetch} />
+      <RemoveGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
       <List mt={4}>
         {isLoading ? (
           <ListItem>Loading...</ListItem>
