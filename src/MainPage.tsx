@@ -5,6 +5,7 @@ import { AddCoupleButton } from "./components/AddCoupleButton";
 import { useEvent } from "./components/EventContext";
 import axios from "axios";
 import { RemoveGuestButton } from "./components/RemoveGuestButton";
+import { RemoveCoupleButton } from "./components/RemoveCoupleButton";
 
 export const MainPage = () => {
   const { eventData } = useEvent();
@@ -34,6 +35,7 @@ export const MainPage = () => {
 
   const brideCount = guests.filter((guest) => guest.is_bride === true).length;
   const groomCount = guests.filter((guest) => guest.is_groom === true).length;
+  const guestCount = guests.length;
 
   return (
     <Box p={8}>
@@ -41,10 +43,20 @@ export const MainPage = () => {
       <h2>Event ID: {eventData.event_id}</h2>
       <Text>Number of Brides: {brideCount}</Text>
       <Text>Number of Grooms: {groomCount}</Text>
+      <Text>Number of Attendees: {guestCount}</Text>
       <AddGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
-      {(brideCount + groomCount !== 2) && (
+      {brideCount + groomCount !== 2 && (
         <AddCoupleButton setShouldRefetch={setShouldRefetch} />
-      )}      <RemoveGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
+      )}{" "}
+      {brideCount + groomCount === 2 && (
+        <RemoveCoupleButton setShouldRefetch={setShouldRefetch} />
+      )}{" "}
+      {guestCount > 0 && (
+        <RemoveGuestButton
+          guests={guests}
+          setShouldRefetch={setShouldRefetch}
+        />
+      )}{" "}
       <List mt={4}>
         {isLoading ? (
           <ListItem>Loading...</ListItem>
