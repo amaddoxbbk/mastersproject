@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { List, ListItem, Box } from "@chakra-ui/react";
 import { AddGuestButton } from "./components/AddGuestButton";
+import { AddCoupleButton } from "./components/AddCoupleButton";
 import { useEvent } from "./components/EventContext";
 import axios from "axios";
 
 export const MainPage = () => {
   const { eventData } = useEvent();
   const [guests, setGuests] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [isLoading, setIsLoading] = useState(false);
+  const [shouldRefetch, setShouldRefetch] = useState(false);
 
-  // Function to fetch guests from the database
   const fetchGuests = async () => {
-    setIsLoading(true); // Set loading state to true before fetching
+    setIsLoading(true);
     try {
       const response = await axios.post("/api/getGuests", {
         event_id: eventData.event_id,
@@ -20,26 +21,22 @@ export const MainPage = () => {
     } catch (error) {
       console.error("Error fetching guests:", error);
     }
-    setIsLoading(false); // Set loading state to false after fetching
+    setIsLoading(false);
   };
 
   useEffect(() => {
-    // Fetch guests when the component mounts or eventData.event_id changes
-    if (eventData.event_id) {
+    if (shouldRefetch || eventData.event_id) {
       fetchGuests();
+      setShouldRefetch(false);
     }
-  }, [eventData.event_id]);
-
-  const addGuestToList = async (name: string) => {
-    // refetch the list of guests to update the UI
-    await fetchGuests();
-  };
+  }, [shouldRefetch, eventData.event_id]);
 
   return (
     <Box p={8}>
       <h1>Welcome to {eventData.event_name}</h1>
       <h2>Event ID: {eventData.event_id}</h2>
-      <AddGuestButton addGuestToList={addGuestToList} guests={guests} />
+      <AddGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
+      <AddCoupleButton setShouldRefetch={setShouldRefetch} />
       <List mt={4}>
         {isLoading ? (
           <ListItem>Loading...</ListItem>

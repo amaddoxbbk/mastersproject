@@ -3,10 +3,14 @@ import { Button, FormControl, FormLabel, Input, Checkbox } from "@chakra-ui/reac
 import { ReusableModal } from "./ReusableModal";
 import WriteData from "./WriteData";
 import { useEvent } from "./EventContext";
-import { z } from "zod";
+import { set, z } from "zod";
 
-export const AddCoupleButton: React.FC = () => {
-  const { eventData } = useEvent();
+interface AddCoupleButtonProps {
+    setShouldRefetch: React.Dispatch<React.SetStateAction<boolean>>; // Add this line
+  }
+
+  export const AddCoupleButton: React.FC<AddCoupleButtonProps> = ({ setShouldRefetch }) => {
+    const { eventData } = useEvent();
   const eventId = eventData.event_id;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -64,6 +68,7 @@ const handleCoupleSubmit = () => {
     setIsGroomTwo(false);
     setIsBrideTwo(false);
     setShouldWriteData(false);
+    setShouldRefetch(true);
   };
 
   const onFailure = (error: any) => {

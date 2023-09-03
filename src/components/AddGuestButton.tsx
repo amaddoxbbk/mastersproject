@@ -10,7 +10,7 @@ import { ReusableModal } from "./ReusableModal";
 import WriteData from "./WriteData";
 import { useEvent } from "./EventContext";
 import GenericDropdown from "./GenericDropdown";
-import { z } from "zod"; // Import Zod
+import { set, z } from "zod"; // Import Zod
 
 const relationshipOptions = [
   { value: "family_of_bride", label: "Family of Bride" },
@@ -31,18 +31,16 @@ const newGuestSchema = z.object({
 
     relationship: z.enum(["family_of_bride", "friends_of_bride", "family_of_groom", "friends_of_groom"]),
     specialStatus: z.string().optional(),
-  isBride: z.boolean(),
-  isGroom: z.boolean(),
 });
 
 interface AddGuestButtonProps {
-  addGuestToList: (name: string) => void;
   guests: any[];
+  setShouldRefetch: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
-  addGuestToList,
   guests,
+  setShouldRefetch
 }) => {
   const { eventData } = useEvent();
   const eventId = eventData.event_id;
@@ -57,8 +55,6 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
   const [plusOne, setPlusOne] = useState("");
   const [relationship, setRelationship] = useState("");
   const [specialStatus, setSpecialStatus] = useState("");
-  const [isBride, setIsBride] = useState(false);
-  const [isGroom, setIsGroom] = useState(false);
   const [shouldWriteData, setShouldWriteData] = useState(false);
   const [selectedBlacklist, setSelectedBlacklist] = useState<string[]>([]);
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
@@ -91,8 +87,6 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
       plusOne,
       relationship,
       specialStatus,
-      isBride,
-      isGroom,
     });
 
     if (!parsedData.success) {
@@ -118,10 +112,10 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
   };
 
   const onSuccess = () => {
-    addGuestToList(name);
     setName("");
     setPlusOne("");
     setShouldWriteData(false);
+    setShouldRefetch(true);
   };
 
   const onFailure = (error: any) => {
@@ -191,22 +185,6 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
           onChange={(e) => setSpecialStatus(e.target.value)}
         />
       </FormControl>
-      <FormControl>
-        <Checkbox
-          isChecked={isBride}
-          onChange={(e) => setIsBride(e.target.checked)}
-        >
-          Is Bride
-        </Checkbox>
-      </FormControl>
-      <FormControl>
-        <Checkbox
-          isChecked={isGroom}
-          onChange={(e) => setIsGroom(e.target.checked)}
-        >
-          Is Groom
-        </Checkbox>
-      </FormControl>
     </>
   );
 
@@ -232,8 +210,6 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
             blacklist_attendee_ids: selectedBlacklist,
             blacklist_attendee_names: getBlacklistNames(),
             special_status: specialStatus,
-            is_bride: isBride,
-            is_groom: isGroom,
           }}
           onSuccess={onSuccess}
           onFailure={onFailure}
