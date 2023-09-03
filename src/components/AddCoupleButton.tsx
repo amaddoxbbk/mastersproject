@@ -23,14 +23,30 @@ interface AddCoupleButtonProps {
   const [shouldWriteData, setShouldWriteData] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
 
-const newCoupleSchema = z.object({
-  nameOne: z.string().min(3, "Name One is required"),
-  isGroomOne: z.boolean(),
-  isBrideOne: z.boolean(),
-  nameTwo: z.string().min(3, "Name Two is required"),
-  isGroomTwo: z.boolean(),
-  isBrideTwo: z.boolean(),
-});
+  const newCoupleSchema = z.object({
+    nameOne: z.string().min(3, "Name One is required"),
+    isGroomOne: z.boolean(),
+    isBrideOne: z.boolean(),
+    nameTwo: z.string().min(3, "Name Two is required"),
+    isGroomTwo: z.boolean(),
+    isBrideTwo: z.boolean(),
+  })
+  .refine(data => {
+    return (data.isGroomOne && !data.isBrideOne) || (!data.isGroomOne && data.isBrideOne);
+  }, {
+    message: "Please select a status for person one",
+    path: ['isGroomOne', 'isBrideOne']
+  })
+  .refine(data => {
+    return (data.isGroomTwo && !data.isBrideTwo) || (!data.isGroomTwo && data.isBrideTwo);
+  }, {
+    message: "Please select a status for person two",
+    path: ['isGroomTwo', 'isBrideTwo']
+  });
+  
+  
+  
+  
 
 const handleCoupleSubmit = () => {
     const parsedData = newCoupleSchema.safeParse({
