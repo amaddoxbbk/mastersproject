@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { List, ListItem, Box, Text } from "@chakra-ui/react";
+import { Box, Text, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { AddGuestButton } from "./components/AddGuestButton";
 import { AddCoupleButton } from "./components/AddCoupleButton";
 import { useEvent } from "./components/EventContext";
@@ -44,35 +44,58 @@ export const MainPage = () => {
       <Text>Number of Brides: {brideCount}</Text>
       <Text>Number of Grooms: {groomCount}</Text>
       <Text>Number of Guests: {guestCount - groomCount - brideCount}</Text>
-
       {brideCount + groomCount === 2 && (
-      <AddGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
+        <AddGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
       )}{" "}
-      
       {brideCount + groomCount !== 2 && (
         <AddCoupleButton setShouldRefetch={setShouldRefetch} />
       )}{" "}
       {brideCount + groomCount === 2 && (
         <RemoveCoupleButton setShouldRefetch={setShouldRefetch} />
       )}{" "}
-{(brideCount + groomCount === 2) && (
-  <RemoveGuestButton
-    guests={guests}
-    setShouldRefetch={setShouldRefetch}
-  />
-)}
-
-      <List mt={4}>
-        {isLoading ? (
-          <ListItem>Loading...</ListItem>
-        ) : guests.length > 0 ? (
-          guests.map((guest, index) => (
-            <ListItem key={index}>{guest.attendee_name}</ListItem>
-          ))
-        ) : (
-          <ListItem>No guests added yet</ListItem>
-        )}
-      </List>
+      {brideCount + groomCount === 2 && (
+        <RemoveGuestButton
+          guests={guests}
+          setShouldRefetch={setShouldRefetch}
+        />
+      )}
+      <Table mt={4} variant="simple">
+        <Thead>
+          <Tr>
+            <Th>Guest Name</Th>
+            <Th>Relationship</Th>
+            <Th>Plus One</Th>
+            <Th>Cannot Sit With</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {isLoading ? (
+            <Tr>
+              <Td>Loading...</Td>
+            </Tr>
+          ) : guests.length > 0 ? (
+            guests.map((guest, index) => (
+              <Tr key={index}>
+                <Td>{guest.attendee_name}</Td>
+                <Td>{guest.relationship || "-"}</Td>
+                <Td>{guest.plus_one_name || "-"}</Td>
+                <Td>
+                  {guest.blacklist_attendee_names
+                    ? guest.blacklist_attendee_names
+                        .replace(/["{}]/g, "")
+                        .split(",")
+                        .join(", ")
+                    : "-"}
+                </Td>
+              </Tr>
+            ))
+          ) : (
+            <Tr>
+              <Td>No guests added yet</Td>
+            </Tr>
+          )}
+        </Tbody>
+      </Table>
     </Box>
   );
 };
