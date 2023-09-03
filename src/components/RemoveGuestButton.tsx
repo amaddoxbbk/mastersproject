@@ -18,7 +18,12 @@ export const RemoveGuestButton: React.FC<RemoveGuestButtonProps> = ({
   const [selectedGuest, setSelectedGuest] = useState("");
   const [shouldWriteData, setShouldWriteData] = useState(false);
 
-  const options = guests.map((guest) => ({
+
+  const filteredGuests = guests.filter(
+    (guest) => !guest.is_bride && !guest.is_groom
+  );
+
+  const options = filteredGuests.map((guest) => ({
     value: guest.attendee_id,
     label: guest.attendee_name,
   }));

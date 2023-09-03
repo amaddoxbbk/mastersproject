@@ -43,15 +43,19 @@ export const MainPage = () => {
       <h2>Event ID: {eventData.event_id}</h2>
       <Text>Number of Brides: {brideCount}</Text>
       <Text>Number of Grooms: {groomCount}</Text>
-      <Text>Number of Attendees: {guestCount}</Text>
+      <Text>Number of Guests: {guestCount - groomCount - brideCount}</Text>
+
+      {brideCount + groomCount === 2 && (
       <AddGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
+      )}{" "}
+      
       {brideCount + groomCount !== 2 && (
         <AddCoupleButton setShouldRefetch={setShouldRefetch} />
       )}{" "}
       {brideCount + groomCount === 2 && (
         <RemoveCoupleButton setShouldRefetch={setShouldRefetch} />
       )}{" "}
-      {guestCount > 0 && (
+      {guestCount - (brideCount + groomCount)> 0 && (
         <RemoveGuestButton
           guests={guests}
           setShouldRefetch={setShouldRefetch}
