@@ -223,6 +223,8 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
             title="Relationship"
           />
         </FormControl>
+
+
         <FormControl>
           <FormLabel>Blacklist Attendee IDs</FormLabel>
           {guests && guests.length > 0 ? (
@@ -248,6 +250,8 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
             <p>No guests available for blacklist.</p>
           )}
         </FormControl>
+
+        
         <FormControl>
           <FormLabel>Special Status</FormLabel>
           <Input

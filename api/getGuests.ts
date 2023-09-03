@@ -18,7 +18,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       return;
     }
 
-    const result = await pool.query('SELECT * FROM attendees WHERE event_id = $1', [eventId]);
+    const result = await pool.query('SELECT * FROM attendees WHERE event_id = $1 Order By 1', [eventId]);
     res.status(200).json(result.rows);
   } catch (error) {
     console.error("Error fetching guests:", error);
