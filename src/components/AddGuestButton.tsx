@@ -30,8 +30,14 @@ const newGuestSchema = z.object({
         message: "Plus One name must be at least 3 characters long",
       }
     ),
-// ADD VALIDATION FOR RELATIONSHIP
-  specialStatus: z.string().optional(),
+    relationship: z
+    .string()
+    .refine(
+      (value) => value !== "" && value !== "Relationship: Select",
+      {
+        message: "Please select a relationship",
+      }
+    ),  specialStatus: z.string().optional(),
 });
 
 interface AddGuestButtonProps {
