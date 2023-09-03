@@ -7,6 +7,9 @@ import {
   Checkbox,
   Stack,
   HStack,
+  Tag,
+  TagLabel,
+  TagCloseButton,
 } from "@chakra-ui/react";
 import { ReusableModal } from "./ReusableModal";
 import WriteData from "./WriteData";
@@ -109,13 +112,24 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
     const isBrideOrGroom = bridesAndGrooms.some(
       (bg) => bg.name === guest.attendee_name && (bg.role === 'bride' || bg.role === 'groom')
     );
-    return guest.attendee_name && guest.attendee_name.trim() !== "" && !isBrideOrGroom;
+    // Exclude names that are already in the blacklist
+    const isAlreadyBlacklisted = selectedBlacklist.includes(guest.attendee_id);
+    return (
+      guest.attendee_name &&
+      guest.attendee_name.trim() !== "" &&
+      !isBrideOrGroom &&
+      !isAlreadyBlacklisted
+    );
   })
   .map((guest) => ({
     value: guest.attendee_id,
     label: guest.attendee_name,
   }));
 
+
+  const removeBlacklistGuest = (id: string) => {
+    setSelectedBlacklist(selectedBlacklist.filter((item) => item !== id));
+  };
 
   const handleGuestSubmit = () => {
     const parsedData = newGuestSchema.safeParse({
@@ -226,32 +240,32 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
 
 
         <FormControl>
-          <FormLabel>Blacklist Attendee IDs</FormLabel>
-          {guests && guests.length > 0 ? (
-            <>
-              <GenericDropdown
-                onSelect={handleSelect}
-                selectedValue={selectedBlacklist}
-                options={options}
-                title="Blacklist"
-              />
-              {selectedBlacklist.length > 0 && (
-                <div>
-                  <h3>Blacklisted Guests:</h3>
-                  <ul>
-                    {selectedBlacklist.map((id, index) => (
-                      <li key={index}>{getBlacklistNameById(id)}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </>
-          ) : (
-            <p>No guests available for blacklist.</p>
-          )}
-        </FormControl>
+    <FormLabel>Blacklist Attendee IDs</FormLabel>
+    {guests && guests.length > 0 ? (
+      <>
+        <GenericDropdown
+          onSelect={handleSelect}
+          selectedValue={selectedBlacklist}
+          options={options}
+          title="Blacklist"
+        />
+        {selectedBlacklist.length > 0 && (
+          <HStack mt={2} spacing={4}>
+            {selectedBlacklist.map((id, index) => (
+              <Tag size="md" key={index} variant="solid" colorScheme="red">
+                <TagLabel>{getBlacklistNameById(id)}</TagLabel>
+                <TagCloseButton onClick={() => removeBlacklistGuest(id)} />
+              </Tag>
+            ))}
+          </HStack>
+        )}
+      </>
+    ) : (
+      <p>No guests available for blacklist.</p>
+    )}
+  </FormControl>
 
-        
+
         <FormControl>
           <FormLabel>Special Status</FormLabel>
           <Input
