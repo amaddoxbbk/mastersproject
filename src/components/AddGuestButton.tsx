@@ -39,6 +39,8 @@ const newGuestSchema = z.object({
       message: "Please select a relationship",
     }),
   guest_allergies: z.string().optional(),
+  plusOneAllergies: z.string().optional(),
+
 });
 
 interface AddGuestButtonProps {
@@ -84,6 +86,7 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
   const [plusOne, setPlusOne] = useState("");
   const [relationship, setRelationship] = useState("");
   const [guest_allergies, setGuestAllergies] = useState("");
+  const [plusOneAllergies, setPlusOneAllergies] = useState("");
   const [shouldWriteData, setShouldWriteData] = useState(false);
   const [selectedBlacklist, setSelectedBlacklist] = useState<string[]>([]);
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
@@ -140,6 +143,7 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
       plusOne,
       relationship,
       guest_allergies,
+      plusOneAllergies,
     });
 
     if (!parsedData.success) {
@@ -177,6 +181,7 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
     setShouldRefetch(true);
     setShowPlusOne(false);
     setFieldErrors({});
+    setPlusOneAllergies("");
   };
 
   const onFailure = (error: any) => {
@@ -281,6 +286,16 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
             onChange={(e) => setGuestAllergies(e.target.value)}
           />
         </FormControl>
+
+        {showPlusOne && (
+  <FormControl>
+    <FormLabel>Plus One Allergies</FormLabel>
+    <Input
+      value={plusOneAllergies}
+      onChange={(e) => setPlusOneAllergies(e.target.value)}
+    />
+  </FormControl>
+)}
       </Stack>
     </>
   );
@@ -307,6 +322,7 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
             blacklist_attendee_ids: selectedBlacklist,
             blacklist_attendee_names: getBlacklistNames(),
             guest_allergies,
+            plusone_allergies: plusOneAllergies,  // new field
             is_bride: isBride,
             is_groom: isGroom,
           }}
