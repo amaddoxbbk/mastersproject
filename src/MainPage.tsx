@@ -42,8 +42,9 @@ export const MainPage = () => {
       <Text>Number of Brides: {brideCount}</Text>
       <Text>Number of Grooms: {groomCount}</Text>
       <AddGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
-      <AddCoupleButton setShouldRefetch={setShouldRefetch} />
-      <RemoveGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
+      {(brideCount + groomCount !== 2) && (
+        <AddCoupleButton setShouldRefetch={setShouldRefetch} />
+      )}      <RemoveGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
       <List mt={4}>
         {isLoading ? (
           <ListItem>Loading...</ListItem>
