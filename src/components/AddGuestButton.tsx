@@ -104,11 +104,18 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
   };
 
   const options = guests
-    .filter((guest) => guest.attendee_name && guest.attendee_name.trim() !== "")
-    .map((guest) => ({
-      value: guest.attendee_id,
-      label: guest.attendee_name,
-    }));
+  .filter((guest) => {
+    // Exclude brides and grooms from the blacklist dropdown
+    const isBrideOrGroom = bridesAndGrooms.some(
+      (bg) => bg.name === guest.attendee_name && (bg.role === 'bride' || bg.role === 'groom')
+    );
+    return guest.attendee_name && guest.attendee_name.trim() !== "" && !isBrideOrGroom;
+  })
+  .map((guest) => ({
+    value: guest.attendee_id,
+    label: guest.attendee_name,
+  }));
+
 
   const handleGuestSubmit = () => {
     const parsedData = newGuestSchema.safeParse({
