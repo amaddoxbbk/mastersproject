@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { List, ListItem, Box } from "@chakra-ui/react";
+import { List, ListItem, Box, Text } from "@chakra-ui/react";
 import { AddGuestButton } from "./components/AddGuestButton";
 import { AddCoupleButton } from "./components/AddCoupleButton";
 import { useEvent } from "./components/EventContext";
@@ -32,10 +32,15 @@ export const MainPage = () => {
     }
   }, [shouldRefetch, eventData.event_id]);
 
+  const brideCount = guests.filter((guest) => guest.is_bride === true).length;
+  const groomCount = guests.filter((guest) => guest.is_groom === true).length;
+
   return (
     <Box p={8}>
       <h1>Welcome to {eventData.event_name}</h1>
       <h2>Event ID: {eventData.event_id}</h2>
+      <Text>Number of Brides: {brideCount}</Text>
+      <Text>Number of Grooms: {groomCount}</Text>
       <AddGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
       <AddCoupleButton setShouldRefetch={setShouldRefetch} />
       <RemoveGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
@@ -53,9 +58,3 @@ export const MainPage = () => {
     </Box>
   );
 };
-
-
-
-
-
-
