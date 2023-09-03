@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   FormControl,
@@ -14,13 +14,10 @@ import { useEvent } from "./EventContext";
 import GenericDropdown from "./GenericDropdown";
 import { set, z } from "zod"; // Import Zod
 
-const relationshipOptions = [
-  { value: "family_of_bride", label: "Family of Bride" },
-  { value: "friends_of_bride", label: "Friends of Bride" },
-  { value: "family_of_groom", label: "Family of Groom" },
-  { value: "friends_of_groom", label: "Friends of Groom" },
-];
-
+interface BrideOrGroom {
+  name: string;
+  role: 'bride' | 'groom';
+}
 // Define Zod schema
 const newGuestSchema = z.object({
   name: z.string().min(3, "Guest name is required"),
@@ -33,13 +30,7 @@ const newGuestSchema = z.object({
         message: "Plus One name must be at least 3 characters long",
       }
     ),
-
-  relationship: z.enum([
-    "family_of_bride",
-    "friends_of_bride",
-    "family_of_groom",
-    "friends_of_groom",
-  ]),
+// ADD VALIDATION FOR RELATIONSHIP
   specialStatus: z.string().optional(),
 });
 
@@ -54,11 +45,30 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
 }) => {
   const { eventData } = useEvent();
   const eventId = eventData.event_id;
+  const [bridesAndGrooms, setBridesAndGrooms] = useState<BrideOrGroom[]>([]);
 
   const getBlacklistNameById = (id: string) => {
     const guest = guests.find((guest) => guest.attendee_id === id);
     return guest ? guest.attendee_name : "Unknown";
   };
+
+  useEffect(() => {
+    const bridesAndGroomsArray: BrideOrGroom[] = [];
+    guests.forEach(guest => {
+      if (guest.is_bride) {
+        bridesAndGroomsArray.push({ name: guest.attendee_name, role: 'bride' });
+      }
+      if (guest.is_groom) {
+        bridesAndGroomsArray.push({ name: guest.attendee_name, role: 'groom' });
+      }
+    });
+    setBridesAndGrooms(bridesAndGroomsArray);
+  }, [guests]);
+
+  const relationshipOptions = bridesAndGrooms.map(({ name, role }) => [
+    { value: `family_of_${role}`, label: `Family of ${name}` },
+    { value: `friends_of_${role}`, label: `Friends of ${name}` },
+  ]).flat();
 
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
