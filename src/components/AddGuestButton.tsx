@@ -12,6 +12,7 @@ import { useEvent } from "./EventContext";
 import GenericDropdown from "./GenericDropdown";
 import { set, z } from "zod"; // Import Zod
 
+
 const relationshipOptions = [
   { value: "family_of_bride", label: "Family of Bride" },
   { value: "friends_of_bride", label: "Friends of Bride" },
@@ -58,6 +59,9 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
   const [shouldWriteData, setShouldWriteData] = useState(false);
   const [selectedBlacklist, setSelectedBlacklist] = useState<string[]>([]);
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
+  const [isBride, setIsBride] = useState(false);
+const [isGroom, setIsGroom] = useState(false);
+
 
   const handleBlacklistChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOptions = Array.from(e.target.selectedOptions).map(
@@ -210,6 +214,8 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
             blacklist_attendee_ids: selectedBlacklist,
             blacklist_attendee_names: getBlacklistNames(),
             special_status: specialStatus,
+            is_bride: isBride,
+            is_groom: isGroom,
           }}
           onSuccess={onSuccess}
           onFailure={onFailure}
