@@ -40,7 +40,6 @@ const newGuestSchema = z.object({
     }),
   guest_allergies: z.string().optional(),
   plusOneAllergies: z.string().optional(),
-
 });
 
 interface AddGuestButtonProps {
@@ -76,8 +75,8 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
 
   const relationshipOptions = bridesAndGrooms
     .map(({ name, role }) => [
-      { value: `family_of_${role}`, label: `Family of ${name}` },
-      { value: `friends_of_${role}`, label: `Friends of ${name}` },
+      { value: `Family of ${name}`, label: `Family of ${name}` },
+      { value: `Friend of ${name}`, label: `Friends of ${name}` },
     ])
     .flat();
 
@@ -138,14 +137,31 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
   };
 
   const handleGuestSubmit = () => {
-    const parsedData = newGuestSchema.safeParse({
+    // Create a copy of the original schema and modify it based on showPlusOne
+    const finalGuestSchema = newGuestSchema.refine(
+      (data) => {
+        if (showPlusOne) {
+          return (
+            (data.plusOne && data.plusOne.length >= 3)
+          );
+        }
+        return true;
+      },
+      {
+        message: "Plus One Name must be at least three characters long",
+        path: ['plusOne'] // specify the fields this refinement is for
+      }
+    );
+  
+    // Parse the data
+    const parsedData = finalGuestSchema.safeParse({
       name,
       plusOne,
       relationship,
       guest_allergies,
       plusOneAllergies,
     });
-
+  
     if (!parsedData.success) {
       const errors: { [key: string]: string } = {};
       parsedData.error.issues.forEach((issue) => {
@@ -204,35 +220,6 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
           <Input value={name} onChange={(e) => setName(e.target.value)} />
         </FormControl>
 
-        <HStack spacing={2}>
-          <FormLabel>Plus One:</FormLabel>
-          <Checkbox
-            isChecked={showPlusOne}
-            onChange={() => setShowPlusOne(true)}
-          >
-            Yes
-          </Checkbox>
-          <Checkbox
-            isChecked={!showPlusOne}
-            onChange={() => setShowPlusOne(false)}
-          >
-            No
-          </Checkbox>
-        </HStack>
-
-        {showPlusOne && (
-          <FormControl mt={-2}>
-            {fieldErrors.plusOne && (
-              <div style={{ color: "red" }}>{fieldErrors.plusOne}</div>
-            )}
-            <FormLabel>Plus One</FormLabel>
-            <Input
-              value={plusOne}
-              onChange={(e) => setPlusOne(e.target.value)}
-            />
-          </FormControl>
-        )}
-
         <FormControl>
           {fieldErrors.relationship && (
             <div style={{ color: "red" }}>{fieldErrors.relationship}</div>
@@ -287,15 +274,44 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
           />
         </FormControl>
 
+        <HStack spacing={2}>
+          <FormLabel>Plus One:</FormLabel>
+          <Checkbox
+            isChecked={showPlusOne}
+            onChange={() => setShowPlusOne(true)}
+          >
+            Yes
+          </Checkbox>
+          <Checkbox
+            isChecked={!showPlusOne}
+            onChange={() => setShowPlusOne(false)}
+          >
+            No
+          </Checkbox>
+        </HStack>
+
         {showPlusOne && (
-  <FormControl>
-    <FormLabel>Plus One Allergies</FormLabel>
-    <Input
-      value={plusOneAllergies}
-      onChange={(e) => setPlusOneAllergies(e.target.value)}
-    />
-  </FormControl>
-)}
+          <FormControl mt={-2}>
+            {fieldErrors.plusOne && (
+              <div style={{ color: "red" }}>{fieldErrors.plusOne}</div>
+            )}
+            <FormLabel>Plus One Name</FormLabel>
+            <Input
+              value={plusOne}
+              onChange={(e) => setPlusOne(e.target.value)}
+            />
+          </FormControl>
+        )}
+
+        {showPlusOne && (
+          <FormControl>
+            <FormLabel>Plus One Allergies</FormLabel>
+            <Input
+              value={plusOneAllergies}
+              onChange={(e) => setPlusOneAllergies(e.target.value)}
+            />
+          </FormControl>
+        )}
       </Stack>
     </>
   );
@@ -322,7 +338,7 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
             blacklist_attendee_ids: selectedBlacklist,
             blacklist_attendee_names: getBlacklistNames(),
             guest_allergies,
-            plusone_allergies: plusOneAllergies,  // new field
+            plusone_allergies: plusOneAllergies, // new field
             is_bride: isBride,
             is_groom: isGroom,
           }}
