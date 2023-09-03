@@ -55,12 +55,13 @@ export const MainPage = () => {
       {brideCount + groomCount === 2 && (
         <RemoveCoupleButton setShouldRefetch={setShouldRefetch} />
       )}{" "}
-      {guestCount - (brideCount + groomCount)> 0 && (
-        <RemoveGuestButton
-          guests={guests}
-          setShouldRefetch={setShouldRefetch}
-        />
-      )}{" "}
+{(brideCount + groomCount === 2) && (
+  <RemoveGuestButton
+    guests={guests}
+    setShouldRefetch={setShouldRefetch}
+  />
+)}
+
       <List mt={4}>
         {isLoading ? (
           <ListItem>Loading...</ListItem>

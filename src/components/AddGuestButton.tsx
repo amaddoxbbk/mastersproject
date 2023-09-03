@@ -19,7 +19,7 @@ import { set, z } from "zod"; // Import Zod
 
 interface BrideOrGroom {
   name: string;
-  role: 'bride' | 'groom';
+  role: "bride" | "groom";
 }
 // Define Zod schema
 const newGuestSchema = z.object({
@@ -33,14 +33,12 @@ const newGuestSchema = z.object({
         message: "Plus One name must be at least 3 characters long",
       }
     ),
-    relationship: z
+  relationship: z
     .string()
-    .refine(
-      (value) => value !== "" && value !== "Relationship: Select",
-      {
-        message: "Please select a relationship",
-      }
-    ),  specialStatus: z.string().optional(),
+    .refine((value) => value !== "" && value !== "Relationship: Select", {
+      message: "Please select a relationship",
+    }),
+  guest_allergies: z.string().optional(),
 });
 
 interface AddGuestButtonProps {
@@ -63,27 +61,29 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
 
   useEffect(() => {
     const bridesAndGroomsArray: BrideOrGroom[] = [];
-    guests.forEach(guest => {
+    guests.forEach((guest) => {
       if (guest.is_bride) {
-        bridesAndGroomsArray.push({ name: guest.attendee_name, role: 'bride' });
+        bridesAndGroomsArray.push({ name: guest.attendee_name, role: "bride" });
       }
       if (guest.is_groom) {
-        bridesAndGroomsArray.push({ name: guest.attendee_name, role: 'groom' });
+        bridesAndGroomsArray.push({ name: guest.attendee_name, role: "groom" });
       }
     });
     setBridesAndGrooms(bridesAndGroomsArray);
   }, [guests]);
 
-  const relationshipOptions = bridesAndGrooms.map(({ name, role }) => [
-    { value: `family_of_${role}`, label: `Family of ${name}` },
-    { value: `friends_of_${role}`, label: `Friends of ${name}` },
-  ]).flat();
+  const relationshipOptions = bridesAndGrooms
+    .map(({ name, role }) => [
+      { value: `family_of_${role}`, label: `Family of ${name}` },
+      { value: `friends_of_${role}`, label: `Friends of ${name}` },
+    ])
+    .flat();
 
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
   const [plusOne, setPlusOne] = useState("");
   const [relationship, setRelationship] = useState("");
-  const [specialStatus, setSpecialStatus] = useState("");
+  const [guest_allergies, setGuestAllergies] = useState("");
   const [shouldWriteData, setShouldWriteData] = useState(false);
   const [selectedBlacklist, setSelectedBlacklist] = useState<string[]>([]);
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
@@ -107,25 +107,28 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
   };
 
   const options = guests
-  .filter((guest) => {
-    // Exclude brides and grooms from the blacklist dropdown
-    const isBrideOrGroom = bridesAndGrooms.some(
-      (bg) => bg.name === guest.attendee_name && (bg.role === 'bride' || bg.role === 'groom')
-    );
-    // Exclude names that are already in the blacklist
-    const isAlreadyBlacklisted = selectedBlacklist.includes(guest.attendee_id);
-    return (
-      guest.attendee_name &&
-      guest.attendee_name.trim() !== "" &&
-      !isBrideOrGroom &&
-      !isAlreadyBlacklisted
-    );
-  })
-  .map((guest) => ({
-    value: guest.attendee_id,
-    label: guest.attendee_name,
-  }));
-
+    .filter((guest) => {
+      // Exclude brides and grooms from the blacklist dropdown
+      const isBrideOrGroom = bridesAndGrooms.some(
+        (bg) =>
+          bg.name === guest.attendee_name &&
+          (bg.role === "bride" || bg.role === "groom")
+      );
+      // Exclude names that are already in the blacklist
+      const isAlreadyBlacklisted = selectedBlacklist.includes(
+        guest.attendee_id
+      );
+      return (
+        guest.attendee_name &&
+        guest.attendee_name.trim() !== "" &&
+        !isBrideOrGroom &&
+        !isAlreadyBlacklisted
+      );
+    })
+    .map((guest) => ({
+      value: guest.attendee_id,
+      label: guest.attendee_name,
+    }));
 
   const removeBlacklistGuest = (id: string) => {
     setSelectedBlacklist(selectedBlacklist.filter((item) => item !== id));
@@ -136,7 +139,7 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
       name,
       plusOne,
       relationship,
-      specialStatus,
+      guest_allergies,
     });
 
     if (!parsedData.success) {
@@ -167,13 +170,13 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
   const onSuccess = () => {
     setName("");
     setPlusOne("");
-    setRelationship(""); // Reset relationship
-    setSpecialStatus(""); // Reset special status
-    setSelectedBlacklist([]); // Reset blacklist
+    setRelationship("");
+    setGuestAllergies("");
+    setSelectedBlacklist([]);
     setShouldWriteData(false);
     setShouldRefetch(true);
     setShowPlusOne(false);
-    setFieldErrors({}); // Reset all field errors
+    setFieldErrors({});
   };
 
   const onFailure = (error: any) => {
@@ -238,39 +241,44 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
           />
         </FormControl>
 
+        <FormControl>
+          <FormLabel>Blacklist Attendee IDs</FormLabel>
+          {guests && guests.length > 0 ? (
+            <>
+              <GenericDropdown
+                onSelect={handleSelect}
+                selectedValue={selectedBlacklist}
+                options={options}
+                title="Blacklist"
+              />
+              {selectedBlacklist.length > 0 && (
+                <HStack mt={2} spacing={4}>
+                  {selectedBlacklist.map((id, index) => (
+                    <Tag
+                      size="md"
+                      key={index}
+                      variant="solid"
+                      colorScheme="red"
+                    >
+                      <TagLabel>{getBlacklistNameById(id)}</TagLabel>
+                      <TagCloseButton
+                        onClick={() => removeBlacklistGuest(id)}
+                      />
+                    </Tag>
+                  ))}
+                </HStack>
+              )}
+            </>
+          ) : (
+            <p>No guests available for blacklist.</p>
+          )}
+        </FormControl>
 
         <FormControl>
-    <FormLabel>Blacklist Attendee IDs</FormLabel>
-    {guests && guests.length > 0 ? (
-      <>
-        <GenericDropdown
-          onSelect={handleSelect}
-          selectedValue={selectedBlacklist}
-          options={options}
-          title="Blacklist"
-        />
-        {selectedBlacklist.length > 0 && (
-          <HStack mt={2} spacing={4}>
-            {selectedBlacklist.map((id, index) => (
-              <Tag size="md" key={index} variant="solid" colorScheme="red">
-                <TagLabel>{getBlacklistNameById(id)}</TagLabel>
-                <TagCloseButton onClick={() => removeBlacklistGuest(id)} />
-              </Tag>
-            ))}
-          </HStack>
-        )}
-      </>
-    ) : (
-      <p>No guests available for blacklist.</p>
-    )}
-  </FormControl>
-
-
-        <FormControl>
-          <FormLabel>Special Status</FormLabel>
+          <FormLabel>Guest Allergies</FormLabel>
           <Input
-            value={specialStatus}
-            onChange={(e) => setSpecialStatus(e.target.value)}
+            value={guest_allergies}
+            onChange={(e) => setGuestAllergies(e.target.value)}
           />
         </FormControl>
       </Stack>
@@ -298,7 +306,7 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
             relationship,
             blacklist_attendee_ids: selectedBlacklist,
             blacklist_attendee_names: getBlacklistNames(),
-            special_status: specialStatus,
+            guest_allergies,
             is_bride: isBride,
             is_groom: isGroom,
           }}
