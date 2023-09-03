@@ -118,6 +118,9 @@ const [isGroom, setIsGroom] = useState(false);
   const onSuccess = () => {
     setName("");
     setPlusOne("");
+    setRelationship(""); // Reset relationship
+    setSpecialStatus(""); // Reset special status
+    setSelectedBlacklist([]); // Reset blacklist
     setShouldWriteData(false);
     setShouldRefetch(true);
   };
