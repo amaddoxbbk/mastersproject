@@ -7,6 +7,8 @@ import axios from "axios";
 import { RemoveGuestButton } from "./components/RemoveGuestButton";
 import { RemoveCoupleButton } from "./components/RemoveCoupleButton";
 
+// a change
+
 export const MainPage = () => {
   const { eventData } = useEvent();
   const [guests, setGuests] = useState<any[]>([]);
