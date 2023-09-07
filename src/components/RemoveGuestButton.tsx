@@ -17,6 +17,8 @@ export const RemoveGuestButton: React.FC<RemoveGuestButtonProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [selectedGuest, setSelectedGuest] = useState("");
   const [shouldWriteData, setShouldWriteData] = useState(false);
+  const [confirmRemove, setConfirmRemove] = useState(false);
+  const selectedGuestName = guests.find(guest => guest.attendee_id === selectedGuest)?.attendee_name || "the guest";
 
 
   const filteredGuests = guests.filter(
@@ -34,8 +36,13 @@ export const RemoveGuestButton: React.FC<RemoveGuestButtonProps> = ({
       return;
     }
 
+    setConfirmRemove(true);
+  };
+
+  const onConfirmedRemove = () => {
     setShouldWriteData(true);
     setIsOpen(false);
+    setConfirmRemove(false);
   };
 
   const onSuccess = () => {
@@ -73,6 +80,15 @@ export const RemoveGuestButton: React.FC<RemoveGuestButtonProps> = ({
         handleSubmit={handleGuestRemove}
       >
         {form}
+      </ReusableModal>
+
+      <ReusableModal
+        isOpen={confirmRemove}
+        onClose={() => setConfirmRemove(false)}
+        title="Confirm Remove"
+        handleSubmit={onConfirmedRemove}
+      >
+        {`Are you sure you want to remove ${selectedGuestName}?`}
       </ReusableModal>
       {shouldWriteData && (
         <WriteData
