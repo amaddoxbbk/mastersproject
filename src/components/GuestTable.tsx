@@ -13,8 +13,7 @@ const Table: React.FC<TableProps> = ({ title, names }) => {
       p={4}
       textAlign="center"
       boxShadow="md"
-      maxW={{ base: "300px", lg: "400px" }}
-      minW={{ base: "300px", lg: "250px" }
+      minW={{ base:"80%", md: "100%", lg: "100%", xl: "100%" }
     }
     >
       <Text fontSize="xl" fontWeight="bold" mb={2}>
