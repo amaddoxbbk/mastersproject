@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useEvent } from './components/EventContext';
 import axios from 'axios';
+import GuestTable from './components/GuestTable';
 
 const PlanBuilder = () => {
   const { eventData } = useEvent();
@@ -38,6 +39,7 @@ const PlanBuilder = () => {
   }, []);
 
   const { num_top_tables, size_top_tables, num_normal_tables, size_normal_tables } = eventInfo || {};
+  const guestNames = guests.map(guest => guest.attendee_name); // Extract guest names
 
   return (
     <div>
@@ -48,11 +50,7 @@ const PlanBuilder = () => {
       <h2>Number of Normal Tables: {num_normal_tables}</h2>
       <h2>Size of Normal Tables: {size_normal_tables}</h2>
       <h2>Guests:</h2>
-      <ul>
-        {guests.map((guest) => (
-          <li key={guest.attendee_id}>{guest.attendee_name}</li>
-        ))}
-      </ul>
+      <GuestTable title="Guest List" names={guestNames} />
     </div>
   );
 };
