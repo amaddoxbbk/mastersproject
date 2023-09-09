@@ -9,7 +9,7 @@ import {
   Th,
   Td,
   HStack,
-  Button
+  Button,
 } from "@chakra-ui/react";
 import { AddGuestButton } from "./components/AddGuestButton";
 import { AddCoupleButton } from "./components/AddCoupleButton";
@@ -51,8 +51,8 @@ export const MainPage = () => {
   const groomCount = guests.filter((guest) => guest.is_groom === true).length;
   const guestCount = guests.length - brideCount - groomCount;
   const couple = guests
-  .filter(guest => guest.is_bride === true || guest.is_groom === true)
-  .map(guest => guest.attendee_name);
+    .filter((guest) => guest.is_bride === true || guest.is_groom === true)
+    .map((guest) => guest.attendee_name);
 
   return (
     <Box p={8}>
@@ -79,7 +79,9 @@ export const MainPage = () => {
           />
         )}
         <EditExistingEventButton />
-        <Button onClick={() => navigate("/plan-builder")}>Go To Plan Builder</Button>
+        <Button onClick={() => navigate("/plan-builder")}>
+          Go To Plan Builder
+        </Button>
       </HStack>
 
       <Table mt={4} variant="simple">
@@ -98,29 +100,35 @@ export const MainPage = () => {
             </Tr>
           ) : guests.length > 0 ? (
             guests
-            .filter(guest => !guest.is_groom && !guest.is_bride) // Filter out guests who are the groom or bride
-            .map((guest, index) => (
-              <Tr key={index}>
-                <Td>{guest.attendee_name}</Td>
-                <Td>{guest.relationship || "-"}</Td>
-                <Td>
-      {
-        guests.find((plusOne) => plusOne.partner_to === guest.attendee_id)?.attendee_name || "-"
-      }
-    </Td>
-                <Td>
-      {
-        // Find the names of the attendees that this guest cannot sit with
-        guest.blacklist_attendee_ids
-          ? guest.blacklist_attendee_ids
-              .map((id: number) => guests.find((g) => g.attendee_id === id)?.attendee_name)
-              .filter(Boolean)
-              .join(", ")
-          : "-"
-      }
-    </Td>
-              </Tr>
-            ))
+              .filter((guest) => !guest.is_groom && !guest.is_bride) // Filter out guests who are the groom or bride
+              .filter((guest) => !guest.partner_to) // Filter out guests who are plus ones
+              .map((guest, index) => (
+                <Tr key={index}>
+                  <Td>{guest.attendee_name}</Td>
+                  <Td>{guest.relationship || "-"}</Td>
+                  <Td>
+                    {guests.find(
+                      (plusOne) => plusOne.partner_to === guest.attendee_id
+                    )?.attendee_name || "-"}
+                  </Td>
+                  <Td>
+                    {
+                      // Find the names of the attendees that this guest cannot sit with
+                      guest.blacklist_attendee_ids &&
+                      guest.blacklist_attendee_ids.length > 0
+                        ? guest.blacklist_attendee_ids
+                            .map(
+                              (id: number) =>
+                                guests.find((g) => g.attendee_id === id)
+                                  ?.attendee_name
+                            )
+                            .filter(Boolean)
+                            .join(", ") || "-"
+                        : "-"
+                    }
+                  </Td>
+                </Tr>
+              ))
           ) : (
             <Tr>
               <Td>No guests added yet</Td>
