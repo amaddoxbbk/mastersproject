@@ -70,25 +70,26 @@ const PlanBuilder = () => {
   const tableData: TableData[] = [
     {
       title: "Table 1",
-      names: ["Alice", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie"],
+      names: ["Alice Johnson", "Bob Smith", "Charlie Brown", "Diego Martinez", "Elena Rodriguez", "Fatima Khan", "Grace Lee", "Hiroshi Tanaka"],
     },
     {
       title: "Table 2",
-      names: ["Alice", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie"],
+      names: ["Isabella Garcia", "Jaden Williams", "Kavita Patel", "Liam O'Brien", "Ming Zhao", "Nadia Ali", "Oscar Diaz", "Priya Nair"],
     },
     {
       title: "Table 3",
-      names: ["Alice", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie"],
+      names: ["Quincy Adams", "Raj Koothrappali", "Samantha Kim", "Tariq Hussein", "Ursula Le Guin", "Viktor Ivanov", "Wendy Wu", "Xiaoming Li"],
     },
     {
       title: "Table 4",
-      names: ["Alice", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie"],
+      names: ["Yasmin Al-Sayyid", "Zachary Taylor", "Aiden Zhang", "Bianca Duarte", "Caleb Johnson", "Dalia Mahmoud", "Elijah Thomas", "Fiona MacLeod"],
     },
     {
       title: "Table 5",
-      names: ["Alice", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie"],
+      names: ["Gloria Ng", "Hassan El-Amin", "Ivy O'Connell", "Jasmine Turner", "Khalid Bin Walid", "Linda McCartney", "Mohammed Al-Fayed", "Nina Simone"],
     },
   ];
+  
 
   return (
     <>
@@ -104,21 +105,20 @@ const PlanBuilder = () => {
           lg: "225px 1fr",
         }}
       >
-        <GridItem area="nav" bg="blue.500">
-          <HStack mt={2} mb={2} width="100%" justifyContent="space-between">
+        <GridItem area="nav">
+          <HStack mt={6} mb={2} ml={2} width="100%" justifyContent="space-between">
             <HStack spacing={3}>
               <Button onClick={() => navigate("/home")}>
                 <i className="fa fa-home" style={{ fontSize: "30px" }}></i>
               </Button>
               <Show above="lg">
-              <Text fontSize="2xl" fontWeight="bold" color="white">
+              <Text fontSize="2xl" fontWeight="bold" color="black">
                 Welcome to {eventData.event_name}
               </Text>
               </Show>
-            
             </HStack>
 
-            <HStack spacing={3}>
+            <HStack spacing={3} mr={6}>
               <EditExistingEventButton />
               <Button onClick={() => navigate("/main")}>
                 Go Back To List
@@ -127,7 +127,7 @@ const PlanBuilder = () => {
           </HStack>
         </GridItem>
 
-        <GridItem area="aside" bg="red.500">
+        <GridItem area="aside" bg="red.500" mt={4}>
           <div>
             <h2>Event ID: {eventData.event_id}</h2>
             <h2>Number of Top Tables: {num_top_tables}</h2>
@@ -138,7 +138,7 @@ const PlanBuilder = () => {
           </div>
         </GridItem>
 
-        <GridItem area="main" bg="green.500">
+        <GridItem area="main">
           <TableGrid tables={tableData} />
         </GridItem>
       </Grid>
