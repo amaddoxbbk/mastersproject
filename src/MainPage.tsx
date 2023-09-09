@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Box, Text, Table, Thead, Tbody, Tr, Th, Td, VStack, HStack } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  VStack,
+  HStack,
+} from "@chakra-ui/react";
 import { AddGuestButton } from "./components/AddGuestButton";
 import { AddCoupleButton } from "./components/AddCoupleButton";
 import { useEvent } from "./components/EventContext";
@@ -36,32 +47,36 @@ export const MainPage = () => {
 
   const brideCount = guests.filter((guest) => guest.is_bride === true).length;
   const groomCount = guests.filter((guest) => guest.is_groom === true).length;
-  const guestCount = guests.length;
+  const guestCount = guests.length - brideCount - groomCount;
+  const couple = guests
+  .filter(guest => guest.is_bride === true || guest.is_groom === true)
+  .map(guest => guest.attendee_name);
 
   return (
     <Box p={8}>
       <h1>Welcome to {eventData.event_name}</h1>
       <h2>Event ID: {eventData.event_id}</h2>
+      <h2>Welcome To The Wedding Of: {couple.join(" and ")}</h2>
       <Text>Number of Brides: {brideCount}</Text>
       <Text>Number of Grooms: {groomCount}</Text>
-      <Text>Number of Guests: {guestCount - groomCount - brideCount}</Text>
+      <Text>Number of Guests: {guestCount}</Text>
       <HStack spacing={4} mt={4}>
-      {brideCount + groomCount !== 2 && (
-        <AddCoupleButton setShouldRefetch={setShouldRefetch} />
-      )}{" "}
-      {brideCount + groomCount === 2 && (
-        <AddGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
-      )}{" "}
-      {brideCount + groomCount === 2 && (
-        <RemoveCoupleButton setShouldRefetch={setShouldRefetch} />
-      )}{" "}
-      {brideCount + groomCount === 2 && (
-        <RemoveGuestButton
-          guests={guests}
-          setShouldRefetch={setShouldRefetch}
-        />
-      )}
-      <EditExistingEventButton />
+        {brideCount + groomCount !== 2 && (
+          <AddCoupleButton setShouldRefetch={setShouldRefetch} />
+        )}{" "}
+        {brideCount + groomCount === 2 && guestCount === 0 && (
+          <RemoveCoupleButton setShouldRefetch={setShouldRefetch} />
+        )}{" "}
+        {brideCount + groomCount === 2 && (
+          <AddGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
+        )}{" "}
+        {brideCount + groomCount === 2 && guestCount > 0 && (
+          <RemoveGuestButton
+            guests={guests}
+            setShouldRefetch={setShouldRefetch}
+          />
+        )}
+        <EditExistingEventButton />
       </HStack>
 
       <Table mt={4} variant="simple">
@@ -79,7 +94,9 @@ export const MainPage = () => {
               <Td>Loading...</Td>
             </Tr>
           ) : guests.length > 0 ? (
-            guests.map((guest, index) => (
+            guests
+            .filter(guest => !guest.is_groom && !guest.is_bride) // Filter out guests who are the groom or bride
+            .map((guest, index) => (
               <Tr key={index}>
                 <Td>{guest.attendee_name}</Td>
                 <Td>{guest.relationship || "-"}</Td>
