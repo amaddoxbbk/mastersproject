@@ -20,7 +20,7 @@ const Table: React.FC<TableProps> = ({ title, names }) => {
       <Text fontSize="xl" fontWeight="bold" mb={2}>
         {title}
       </Text>
-      <UnorderedList textAlign="center">
+      <UnorderedList textAlign="center" listStyleType='none' margin='0'>
         {names.map((name, index) => (
           <ListItem key={index} textAlign="center">
             {name}
