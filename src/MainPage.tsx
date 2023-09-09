@@ -103,7 +103,12 @@ export const MainPage = () => {
               <Tr key={index}>
                 <Td>{guest.attendee_name}</Td>
                 <Td>{guest.relationship || "-"}</Td>
-                <Td>{guest.plus_one_name || "-"}</Td>
+                <Td>
+      {
+        // Find the plus one by looking up the 'partner_to' field
+        guests.find((plusOne) => plusOne.partner_to === guest.attendee_id)?.attendee_name || "-"
+      }
+    </Td>
                 <Td>
                   {guest.blacklist_attendee_names
                     ? guest.blacklist_attendee_names
