@@ -69,23 +69,23 @@ const PlanBuilder = () => {
   const tableData: TableData[] = [
     {
       title: "Table 1",
-      names: ["Alice", "Bob", "Charlie"],
+      names: ["Alice", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie"],
     },
     {
       title: "Table 2",
-      names: ["Dave", "Eve", "Frank"],
+      names: ["Alice", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie"],
     },
     {
       title: "Table 3",
-      names: ["Grace", "Heidi", "Ivan"],
+      names: ["Alice", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie"],
     },
     {
       title: "Table 4",
-      names: ["Judy", "Mallory", "Oscar"],
+      names: ["Alice", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie"],
     },
     {
       title: "Table 5",
-      names: ["Peggy", "Sybil", "Wendy"],
+      names: ["Alice", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie", "Bob", "Charlie"],
     },
   ];
 
