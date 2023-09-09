@@ -10,10 +10,17 @@ import {
   Box,
   VStack,
   Text,
+  Table,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { EditExistingEventButton } from "./components/EditExistingEventButton";
 import "font-awesome/css/font-awesome.min.css";
+import TableGrid from "./components/TableGrid";
+
+interface TableData {
+  title: string;
+  names: string[];
+}
 
 const PlanBuilder = () => {
   const { eventData } = useEvent();
@@ -59,6 +66,30 @@ const PlanBuilder = () => {
   } = eventInfo || {};
   const guestNames = guests.map((guest) => guest.attendee_name);
 
+  const tableData: TableData[] = [
+    {
+      title: "Table 1",
+      names: ["Alice", "Bob", "Charlie"],
+    },
+    {
+      title: "Table 2",
+      names: ["Dave", "Eve", "Frank"],
+    },
+    {
+      title: "Table 3",
+      names: ["Grace", "Heidi", "Ivan"],
+    },
+    {
+      title: "Table 4",
+      names: ["Judy", "Mallory", "Oscar"],
+    },
+    {
+      title: "Table 5",
+      names: ["Peggy", "Sybil", "Wendy"],
+    },
+  ];
+  
+
   return (
     <>
       <Grid
@@ -98,8 +129,8 @@ const PlanBuilder = () => {
           </div>
         </GridItem>
 
-        <GridItem bg="green.500">
-          <GuestTable title="Guest List" names={guestNames} />
+        <GridItem area="main" bg="green.500">
+          <TableGrid tables={tableData}/>
         </GridItem>
       </Grid>
     </>

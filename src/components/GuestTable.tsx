@@ -1,4 +1,4 @@
-import { Box, Text, UnorderedList, ListItem } from "@chakra-ui/react";
+import { Card, Text, UnorderedList, ListItem, Center } from "@chakra-ui/react";
 
 interface TableProps {
   title: string;
@@ -7,16 +7,16 @@ interface TableProps {
 
 const Table: React.FC<TableProps> = ({ title, names }) => {
   return (
-    <Box borderWidth="1px" borderRadius="lg" p={4} className="table">
+    <Card borderWidth="1px" borderRadius="lg" p={4} className="table">
       <Text fontSize="xl" fontWeight="bold">
-        {title}
+        {title} 
       </Text>
       <UnorderedList>
         {names.map((name, index) => (
           <ListItem key={index}>{name}</ListItem>
         ))}
       </UnorderedList>
-    </Box>
+    </Card>
   );
 };
 
