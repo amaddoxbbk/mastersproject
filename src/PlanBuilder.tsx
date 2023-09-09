@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useEvent } from './components/EventContext';
 import axios from 'axios';
 import GuestTable from './components/GuestTable';
+import { Button } from '@chakra-ui/react';
+import { useNavigate } from "react-router-dom";
+
 
 const PlanBuilder = () => {
   const { eventData } = useEvent();
   const [guests, setGuests] = useState<any[]>([]);
   const [eventInfo, setEventInfo] = useState<any>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchGuests = async () => {
@@ -42,6 +46,8 @@ const PlanBuilder = () => {
   const guestNames = guests.map(guest => guest.attendee_name); // Extract guest names
 
   return (
+    <>
+    <Button onClick={() => navigate("/main")}>Go Back To List Builder</Button>
     <div>
       <h1>Welcome to {eventData.event_name}</h1>
       <h2>Event ID: {eventData.event_id}</h2>
@@ -52,6 +58,7 @@ const PlanBuilder = () => {
       <h2>Guests:</h2>
       <GuestTable title="Guest List" names={guestNames} />
     </div>
+    </>
   );
 };
 
