@@ -92,6 +92,8 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
   const [isBride, setIsBride] = useState(false);
   const [isGroom, setIsGroom] = useState(false);
   const [showPlusOne, setShowPlusOne] = useState(false);
+  const [mainGuestId, setMainGuestId] = useState<string | null>(null);
+  const [shouldWritePlusOneData, setShouldWritePlusOneData] = useState(false);
 
   const handleBlacklistChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOptions = Array.from(e.target.selectedOptions).map(
@@ -137,22 +139,21 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
   };
 
   const handleGuestSubmit = () => {
+    console.log("handleGuestSubmit called");
     // Create a copy of the original schema and modify it based on showPlusOne
     const finalGuestSchema = newGuestSchema.refine(
       (data) => {
         if (showPlusOne) {
-          return (
-            (data.plusOne && data.plusOne.length >= 3)
-          );
+          return data.plusOne && data.plusOne.length >= 3;
         }
         return true;
       },
       {
         message: "Plus One Name must be at least three characters long",
-        path: ['plusOne'] // specify the fields this refinement is for
+        path: ["plusOne"], // specify the fields this refinement is for
       }
     );
-  
+
     // Parse the data
     const parsedData = finalGuestSchema.safeParse({
       name,
@@ -161,7 +162,7 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
       guest_allergies,
       plusOneAllergies,
     });
-  
+
     if (!parsedData.success) {
       const errors: { [key: string]: string } = {};
       parsedData.error.issues.forEach((issue) => {
@@ -183,11 +184,37 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
       return;
     }
 
+    setMainGuestId(null);
     setShouldWriteData(true);
     setIsOpen(false);
   };
 
-  const onSuccess = () => {
+  const onMainGuestSuccess = (data: any) => {
+    console.log("onMainGuestSuccess called");
+    setMainGuestId(data.attendee_id);
+
+    if (!showPlusOne) {
+      setName("");
+      setPlusOne("");
+      setRelationship("");
+      setGuestAllergies("");
+      setSelectedBlacklist([]);
+      setShouldWriteData(false);
+      setShouldRefetch(true);
+      setShowPlusOne(false);
+      setFieldErrors({});
+      setPlusOneAllergies("");
+    }
+
+    if (showPlusOne) {
+      console.log("Setting shouldWritePlusOneData to true");
+      setShouldWritePlusOneData(true);
+    }
+    setShouldWriteData(false);
+  };
+
+  const onPlusOneSuccess = () => {
+    console.log("onPlusOneSuccess called");
     setName("");
     setPlusOne("");
     setRelationship("");
@@ -198,11 +225,16 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
     setShowPlusOne(false);
     setFieldErrors({});
     setPlusOneAllergies("");
+    setShouldWritePlusOneData(false);
+    setMainGuestId(null);
+    setShouldRefetch(true);
   };
 
   const onFailure = (error: any) => {
+    console.log("onFailure called", error);
     console.error("There was an error adding the guest", error);
     setShouldWriteData(false);
+    setShouldWritePlusOneData(false);
   };
 
   const getBlacklistNames = () => {
@@ -333,16 +365,30 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
           payload={{
             event_id: eventId,
             attendee_name: name,
-            plus_one_name: plusOne,
-            relationship,
+            relationship: relationship,
             blacklist_attendee_ids: selectedBlacklist,
-            blacklist_attendee_names: getBlacklistNames(),
-            guest_allergies,
-            plusone_allergies: plusOneAllergies, // new field
-            is_bride: isBride,
-            is_groom: isGroom,
+            guest_allergies: guest_allergies,
+            is_bride: false,
+            is_groom: false,
           }}
-          onSuccess={onSuccess}
+          onSuccess={onMainGuestSuccess}
+          onFailure={onFailure}
+        />
+      )}
+      {shouldWritePlusOneData && (
+        <WriteData
+          endpoint="/api/addGuest"
+          payload={{
+            event_id: eventId,
+            attendee_name: plusOne,
+            relationship: relationship,
+            blacklist_attendee_ids: selectedBlacklist,
+            guest_allergies: plusOneAllergies,
+            partner_to: mainGuestId,
+            is_bride: false,
+            is_groom: false,
+          }}
+          onSuccess={onPlusOneSuccess}
           onFailure={onFailure}
         />
       )}

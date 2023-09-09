@@ -16,7 +16,6 @@ const Table: React.FC<TableProps> = ({ title, names }) => {
           <ListItem key={index}>{name}</ListItem>
         ))}
       </UnorderedList>
-      {/* Other table details */}
     </Box>
   );
 };
