@@ -88,15 +88,20 @@ const PlanBuilder = () => {
       names: ["Peggy", "Sybil", "Wendy"],
     },
   ];
-  
 
   return (
     <>
       <Grid
-        templateAreas={`
-          "nav nav"
-          "aside main "
-        `}
+        templateAreas={{
+          base: `"nav " 
+        "aside"
+        "main"`,
+          lg: `"nav nav" "aside main"`,
+        }}
+        templateColumns={{
+          base: "1fr",
+          lg: "225px 1fr",
+        }}
       >
         <GridItem area="nav" bg="blue.500">
           <HStack mt={2} mb={2} width="100%" justifyContent="space-between">
@@ -130,7 +135,7 @@ const PlanBuilder = () => {
         </GridItem>
 
         <GridItem area="main" bg="green.500">
-          <TableGrid tables={tableData}/>
+          <TableGrid tables={tableData} />
         </GridItem>
       </Grid>
     </>
