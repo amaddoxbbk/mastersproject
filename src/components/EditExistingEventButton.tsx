@@ -125,7 +125,7 @@ export const EditExistingEventButton: React.FC = () => {
   return (
     <>
       <Button onClick={() => setIsOpenEdit(true)}>
-        Edit Event Capacity
+        Edit Event
       </Button>
       <ReusableModal
         isOpen={isOpenEdit}
