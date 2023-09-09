@@ -105,18 +105,20 @@ export const MainPage = () => {
                 <Td>{guest.relationship || "-"}</Td>
                 <Td>
       {
-        // Find the plus one by looking up the 'partner_to' field
         guests.find((plusOne) => plusOne.partner_to === guest.attendee_id)?.attendee_name || "-"
       }
     </Td>
                 <Td>
-                  {guest.blacklist_attendee_names
-                    ? guest.blacklist_attendee_names
-                        .replace(/["{}]/g, "")
-                        .split(",")
-                        .join(", ")
-                    : "-"}
-                </Td>
+      {
+        // Find the names of the attendees that this guest cannot sit with
+        guest.blacklist_attendee_ids
+          ? guest.blacklist_attendee_ids
+              .map((id: number) => guests.find((g) => g.attendee_id === id)?.attendee_name)
+              .filter(Boolean)
+              .join(", ")
+          : "-"
+      }
+    </Td>
               </Tr>
             ))
           ) : (
