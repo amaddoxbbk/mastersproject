@@ -5,6 +5,7 @@ import WriteData from "./components/WriteData";
 import { CreateNewEventButton } from "./components/CreateNewEventButton";
 import { FindExistingEventButton } from "./components/FindExistingEventButton";
 import { useEvent } from "./components/EventContext";
+import { RemoveExistingEventButton } from "./components/RemoveExistingEventButton";
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -20,6 +21,8 @@ export const Register = () => {
     { value: string; label: string }[]
   >([]);
   const { eventData, setEventData } = useEvent();
+  const [shouldRefetch, setShouldRefetch] = useState(false); // <-- Add this line
+
 
   useEffect(() => {
     console.log("Updated event context:", eventData);
@@ -80,19 +83,29 @@ export const Register = () => {
   };
 
   useEffect(() => {
-    fetch("/api/getEvents")
-      .then((response) => response.json())
-      .then((data: any[]) => {
-        const fetchedEventOptions = data.map((event) => ({
-          value: event.event_id.toString(),
-          label: event.event_name,
-        }));
-        setEventOptions(fetchedEventOptions);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the event names: ", error);
-      });
-  }, []);
+    const fetchEvents = () => {
+      fetch("/api/getEvents")
+        .then((response) => response.json())
+        .then((data: any[]) => {
+          const fetchedEventOptions = data.map((event) => ({
+            value: event.event_id.toString(),
+            label: event.event_name,
+          }));
+          setEventOptions(fetchedEventOptions);
+        })
+        .catch((error) => {
+          console.error("There was an error fetching the event names: ", error);
+        });
+    };
+  
+    fetchEvents(); // Fetch events initially
+  
+    if (shouldRefetch) {
+      fetchEvents(); // Fetch events again if shouldRefetch is true
+      setShouldRefetch(false); // Reset the refetch trigger
+    }
+  }, [shouldRefetch]);
+  
 
   return (
     <Box p={8}>
@@ -104,6 +117,11 @@ export const Register = () => {
         handleFindEventSubmit={handleFindEventSubmit}
         eventOptions={eventOptions}
       />
+
+      <RemoveExistingEventButton
+      eventOptions={eventOptions}
+      setShouldRefetch={setShouldRefetch}
+    />
 
       {shouldWriteData && (
         <WriteData
