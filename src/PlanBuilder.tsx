@@ -11,6 +11,7 @@ import {
   VStack,
   Text,
   Table,
+  Show,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { EditExistingEventButton } from "./components/EditExistingEventButton";
@@ -109,15 +110,18 @@ const PlanBuilder = () => {
               <Button onClick={() => navigate("/home")}>
                 <i className="fa fa-home" style={{ fontSize: "30px" }}></i>
               </Button>
+              <Show above="lg">
               <Text fontSize="2xl" fontWeight="bold" color="white">
                 Welcome to {eventData.event_name}
               </Text>
+              </Show>
+            
             </HStack>
 
             <HStack spacing={3}>
               <EditExistingEventButton />
               <Button onClick={() => navigate("/main")}>
-                Go Back To List Builder
+                Go Back To List
               </Button>
             </HStack>
           </HStack>
