@@ -24,7 +24,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     );
 
     if (result.rowCount === 0) {
-      return res.status(404).json({ error: 'No guests found for this event' });
+      return res.status(200).json({ error: 'No guests found for this event' }); // if no guest found delete is 'successful'
     }
 
     res.status(200).json({ message: 'Guests removed successfully', removedGuests: result.rows });
