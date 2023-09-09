@@ -8,8 +8,8 @@ import {
   Tr,
   Th,
   Td,
-  VStack,
   HStack,
+  Button
 } from "@chakra-ui/react";
 import { AddGuestButton } from "./components/AddGuestButton";
 import { AddCoupleButton } from "./components/AddCoupleButton";
@@ -18,8 +18,10 @@ import axios from "axios";
 import { RemoveGuestButton } from "./components/RemoveGuestButton";
 import { RemoveCoupleButton } from "./components/RemoveCoupleButton";
 import { EditExistingEventButton } from "./components/EditExistingEventButton";
+import { useNavigate } from "react-router-dom";
 
 export const MainPage = () => {
+  const navigate = useNavigate();
   const { eventData } = useEvent();
   const [guests, setGuests] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -77,6 +79,7 @@ export const MainPage = () => {
           />
         )}
         <EditExistingEventButton />
+        <Button onClick={() => navigate("/plan-builder")}>Plan Builder</Button>
       </HStack>
 
       <Table mt={4} variant="simple">

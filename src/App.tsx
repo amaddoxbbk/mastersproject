@@ -7,6 +7,7 @@ import {
 import { Register } from "./Register";
 import { MainPage } from "./MainPage";
 import { EventProvider } from "./components/EventContext";
+import PlanBuilder from "./PlanBuilder";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/register" element={<Register />} />
           <Route path="/main" element={<MainPage />} />
+          <Route path="/plan-builder" element={<PlanBuilder />} />
           <Route path="*" element={<Navigate to="/register" />} />
         </Routes>
       </Router>
