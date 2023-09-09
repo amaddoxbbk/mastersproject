@@ -1,10 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { useEvent } from './components/EventContext';
-import axios from 'axios';
-import GuestTable from './components/GuestTable';
-import { Button, Grid, GridItem, HStack, Box } from '@chakra-ui/react';
+import React, { useEffect, useState } from "react";
+import { useEvent } from "./components/EventContext";
+import axios from "axios";
+import GuestTable from "./components/GuestTable";
+import {
+  Button,
+  Grid,
+  GridItem,
+  HStack,
+  Box,
+  VStack,
+  Text,
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { EditExistingEventButton } from './components/EditExistingEventButton';
+import { EditExistingEventButton } from "./components/EditExistingEventButton";
+import "font-awesome/css/font-awesome.min.css";
 
 const PlanBuilder = () => {
   const { eventData } = useEvent();
@@ -42,27 +51,44 @@ const PlanBuilder = () => {
     fetchEventInfo();
   }, []);
 
-  const { num_top_tables, size_top_tables, num_normal_tables, size_normal_tables } = eventInfo || {};
-  const guestNames = guests.map(guest => guest.attendee_name);
+  const {
+    num_top_tables,
+    size_top_tables,
+    num_normal_tables,
+    size_normal_tables,
+  } = eventInfo || {};
+  const guestNames = guests.map((guest) => guest.attendee_name);
 
   return (
     <>
       <Grid
-        templateAreas = {`
+        templateAreas={`
           "nav nav"
           "aside main "
         `}
       >
-        <GridItem area='nav' bg="blue.500">
-          <HStack>
-            <EditExistingEventButton />
-            <Button onClick={() => navigate("/main")}>Go Back To List Builder</Button>
+        <GridItem area="nav" bg="blue.500">
+          <HStack mt={2} mb={2} width="100%" justifyContent="space-between">
+            <HStack spacing={3}>
+              <Button onClick={() => navigate("/home")}>
+                <i className="fa fa-home" style={{ fontSize: "30px" }}></i>
+              </Button>
+              <Text fontSize="2xl" fontWeight="bold" color="white">
+                Welcome to {eventData.event_name}
+              </Text>
+            </HStack>
+
+            <HStack spacing={3}>
+              <EditExistingEventButton />
+              <Button onClick={() => navigate("/main")}>
+                Go Back To List Builder
+              </Button>
+            </HStack>
           </HStack>
-          <h1>Welcome to {eventData.event_name}</h1>
         </GridItem>
 
-        <GridItem area='aside' bg="red.500">
-        <div>
+        <GridItem area="aside" bg="red.500">
+          <div>
             <h2>Event ID: {eventData.event_id}</h2>
             <h2>Number of Top Tables: {num_top_tables}</h2>
             <h2>Size of Top Tables: {size_top_tables}</h2>
@@ -71,10 +97,8 @@ const PlanBuilder = () => {
             <h2>Guests:</h2>
           </div>
         </GridItem>
-        
 
         <GridItem bg="green.500">
-
           <GuestTable title="Guest List" names={guestNames} />
         </GridItem>
       </Grid>
