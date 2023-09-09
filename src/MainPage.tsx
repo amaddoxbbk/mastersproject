@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, Text, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
+import { Box, Text, Table, Thead, Tbody, Tr, Th, Td, VStack, HStack } from "@chakra-ui/react";
 import { AddGuestButton } from "./components/AddGuestButton";
 import { AddCoupleButton } from "./components/AddCoupleButton";
 import { useEvent } from "./components/EventContext";
 import axios from "axios";
 import { RemoveGuestButton } from "./components/RemoveGuestButton";
 import { RemoveCoupleButton } from "./components/RemoveCoupleButton";
-
-// a change
+import { EditExistingEventButton } from "./components/EditExistingEventButton";
 
 export const MainPage = () => {
   const { eventData } = useEvent();
@@ -46,11 +45,12 @@ export const MainPage = () => {
       <Text>Number of Brides: {brideCount}</Text>
       <Text>Number of Grooms: {groomCount}</Text>
       <Text>Number of Guests: {guestCount - groomCount - brideCount}</Text>
-      {brideCount + groomCount === 2 && (
-        <AddGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
-      )}{" "}
+      <HStack spacing={4} mt={4}>
       {brideCount + groomCount !== 2 && (
         <AddCoupleButton setShouldRefetch={setShouldRefetch} />
+      )}{" "}
+      {brideCount + groomCount === 2 && (
+        <AddGuestButton guests={guests} setShouldRefetch={setShouldRefetch} />
       )}{" "}
       {brideCount + groomCount === 2 && (
         <RemoveCoupleButton setShouldRefetch={setShouldRefetch} />
@@ -61,6 +61,9 @@ export const MainPage = () => {
           setShouldRefetch={setShouldRefetch}
         />
       )}
+      <EditExistingEventButton />
+      </HStack>
+
       <Table mt={4} variant="simple">
         <Thead>
           <Tr>
