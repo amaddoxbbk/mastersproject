@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useEvent } from './components/EventContext';
 import axios from 'axios';
 import GuestTable from './components/GuestTable';
-import { Button } from '@chakra-ui/react';
+import { Button, Grid, GridItem, HStack, Box } from '@chakra-ui/react';
 import { useNavigate } from "react-router-dom";
-
+import { EditExistingEventButton } from './components/EditExistingEventButton';
 
 const PlanBuilder = () => {
   const { eventData } = useEvent();
@@ -43,21 +43,41 @@ const PlanBuilder = () => {
   }, []);
 
   const { num_top_tables, size_top_tables, num_normal_tables, size_normal_tables } = eventInfo || {};
-  const guestNames = guests.map(guest => guest.attendee_name); // Extract guest names
+  const guestNames = guests.map(guest => guest.attendee_name);
 
   return (
     <>
-    <Button onClick={() => navigate("/main")}>Go Back To List Builder</Button>
-    <div>
-      <h1>Welcome to {eventData.event_name}</h1>
-      <h2>Event ID: {eventData.event_id}</h2>
-      <h2>Number of Top Tables: {num_top_tables}</h2>
-      <h2>Size of Top Tables: {size_top_tables}</h2>
-      <h2>Number of Normal Tables: {num_normal_tables}</h2>
-      <h2>Size of Normal Tables: {size_normal_tables}</h2>
-      <h2>Guests:</h2>
-      <GuestTable title="Guest List" names={guestNames} />
-    </div>
+      <Grid
+        templateAreas = {`
+          "nav nav"
+          "aside main "
+        `}
+      >
+        <GridItem area='nav' bg="blue.500">
+          <HStack>
+            <EditExistingEventButton />
+            <Button onClick={() => navigate("/main")}>Go Back To List Builder</Button>
+          </HStack>
+          <h1>Welcome to {eventData.event_name}</h1>
+        </GridItem>
+
+        <GridItem area='aside' bg="red.500">
+        <div>
+            <h2>Event ID: {eventData.event_id}</h2>
+            <h2>Number of Top Tables: {num_top_tables}</h2>
+            <h2>Size of Top Tables: {size_top_tables}</h2>
+            <h2>Number of Normal Tables: {num_normal_tables}</h2>
+            <h2>Size of Normal Tables: {size_normal_tables}</h2>
+            <h2>Guests:</h2>
+          </div>
+        </GridItem>
+        
+
+        <GridItem bg="green.500">
+
+          <GuestTable title="Guest List" names={guestNames} />
+        </GridItem>
+      </Grid>
     </>
   );
 };

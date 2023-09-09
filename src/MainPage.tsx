@@ -78,7 +78,6 @@ export const MainPage = () => {
             setShouldRefetch={setShouldRefetch}
           />
         )}
-        <EditExistingEventButton />
         <Button onClick={() => navigate("/plan-builder")}>
           Go To Plan Builder
         </Button>
