@@ -1,5 +1,6 @@
-import { SimpleGrid, Text } from "@chakra-ui/react";
-import Table from "./GuestTable"; // Import your Table component
+import { SimpleGrid, Box } from "@chakra-ui/react";
+import Table from "./GuestTable";
+import { useMediaQuery } from "@chakra-ui/react";
 
 interface TableData {
   title: string;
@@ -11,6 +12,8 @@ interface Props {
 }
 
 const TableGrid: React.FC<Props> = ({ tables }) => {
+  const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
+
   return (
     <SimpleGrid
       columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
@@ -18,7 +21,14 @@ const TableGrid: React.FC<Props> = ({ tables }) => {
       spacing={6}
     >
       {tables.map((table, index) => (
-        <Table key={index} title={table.title} names={table.names} />
+        <Box
+          key={index}
+          w="100%"
+          display="flex"
+          justifyContent={isLargerThan768 ? "flex-start" : "center"}
+        >
+          <Table title={table.title} names={table.names} />
+        </Box>
       ))}
     </SimpleGrid>
   );
