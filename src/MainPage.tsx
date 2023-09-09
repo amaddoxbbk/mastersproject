@@ -79,7 +79,7 @@ export const MainPage = () => {
           />
         )}
         <EditExistingEventButton />
-        <Button onClick={() => navigate("/plan-builder")}>Plan Builder</Button>
+        <Button onClick={() => navigate("/plan-builder")}>Go To Plan Builder</Button>
       </HStack>
 
       <Table mt={4} variant="simple">
