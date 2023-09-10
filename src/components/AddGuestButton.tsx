@@ -267,7 +267,7 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
         </FormControl>
 
         <FormControl>
-          <FormLabel>Blacklist Attendee IDs</FormLabel>
+          <FormLabel>Should Not Sit With</FormLabel>
           {guests && guests.length > 0 ? (
             <>
 

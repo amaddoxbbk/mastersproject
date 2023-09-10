@@ -14,7 +14,6 @@ interface DropdownProps {
 }
 
 const GenericDropdown = ({ onSelect, selectedValue, options, title }: DropdownProps) => {
-  console.log("Options Array: ", options); // Log entire options array
 
   const currentOption = options.find(option => option.value === selectedValue);
 
@@ -23,7 +22,7 @@ const GenericDropdown = ({ onSelect, selectedValue, options, title }: DropdownPr
       <MenuButton as={Button} rightIcon={<BsChevronDown />}>
         {title}: {currentOption?.label || "Select"}
       </MenuButton>
-      <MenuList>
+      <MenuList maxHeight="200px" overflowY="auto">
         {options.map((option, index) => (
           <MenuItem 
             key={option.value || index} // Use index as a fallback
