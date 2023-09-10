@@ -129,6 +129,7 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
         !isAlreadyBlacklisted
       );
     })
+    .sort((a, b) => a.attendee_name.localeCompare(b.attendee_name))  // Sorting alphabetically
     .map((guest) => ({
       value: guest.attendee_id,
       label: guest.attendee_name,
@@ -269,6 +270,7 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
           <FormLabel>Blacklist Attendee IDs</FormLabel>
           {guests && guests.length > 0 ? (
             <>
+
               <GenericDropdown
                 onSelect={handleSelect}
                 selectedValue={selectedBlacklist}
