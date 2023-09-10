@@ -15,6 +15,7 @@ const Table: React.FC<TableProps> = ({ title, names }) => {
       boxShadow="md"
       bg="#faf6eb"  // Slightly off-white background color
       minW={{ base:"80%", md: "100%", lg: "100%", xl: "100%" }
+
     }
     >
       <Text fontSize="xl" fontWeight="bold" mb={2}>

@@ -1,6 +1,6 @@
-import { SimpleGrid, Box } from "@chakra-ui/react";
+import React, { useRef, useEffect } from "react";
+import { SimpleGrid, Box, useMediaQuery } from "@chakra-ui/react";
 import Table from "./GuestTable";
-import { useMediaQuery } from "@chakra-ui/react";
 
 interface TableData {
   title: string;
@@ -13,6 +13,25 @@ interface Props {
 
 const TableGrid: React.FC<Props> = ({ tables }) => {
   const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
+  const tableRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    let maxHeight = 0;
+    tableRefs.current.forEach((table) => {
+      if (table) {
+        const height = table.getBoundingClientRect().height;
+        if (height > maxHeight) {
+          maxHeight = height;
+        }
+      }
+    });
+
+    tableRefs.current.forEach((table) => {
+      if (table) {
+        table.style.height = `${maxHeight}px`;
+      }
+    });
+  }, [tables]);
 
   return (
     <SimpleGrid
@@ -26,6 +45,7 @@ const TableGrid: React.FC<Props> = ({ tables }) => {
           w="100%"
           display="flex"
           justifyContent={isLargerThan768 ? "flex-start" : "center"}
+          ref={(el) => (tableRefs.current[index] = el)}
         >
           <Table title={table.title} names={table.names} />
         </Box>
