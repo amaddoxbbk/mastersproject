@@ -57,9 +57,10 @@ const PlanBuilder = () => {
   } = eventInfo || {};
 
   const sizeNormalTablesNumber = parseInt(size_normal_tables, 10);
+  const sizeTopTableNumber = parseInt(size_top_tables, 10);
 
   // Use the utility function to create table data
-  const tableData = createTableData(guests, sizeNormalTablesNumber);
+  const tableData = createTableData(guests, sizeNormalTablesNumber, sizeTopTableNumber);
 
   return (
     <>
