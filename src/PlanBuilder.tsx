@@ -19,6 +19,7 @@ import TableGrid from "./components/TableGrid";
 import { createTableData } from "./utilities/tableUtils";
 import { ReusableModal } from "./components/ReusableModal";
 import GenericDropdown from "./components/GenericDropdown";
+import { Flex } from "@chakra-ui/react";
 
 interface TableData {
   title: string;
@@ -174,13 +175,15 @@ const PlanBuilder = () => {
     title="Select Guests"
   />
   {selectedTopTableGuests.length > 0 && (
-    <HStack mt={2} spacing={4}>
+        <Flex mt={2} flexWrap="wrap"> {/* Use Flex and set flexWrap to "wrap" */}
+
       {selectedTopTableGuests.map((name, index) => (
         <Tag
           size="md"
           key={index}
           variant="solid"
           colorScheme="blue"
+          m={1}
         >
           <TagLabel>{name}</TagLabel>
           <TagCloseButton
@@ -188,7 +191,7 @@ const PlanBuilder = () => {
           />
         </Tag>
       ))}
-    </HStack>
+    </Flex>
   )}
 </ReusableModal>
 
