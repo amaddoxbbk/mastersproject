@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useEvent } from "./components/EventContext";
 import axios from "axios";
-import {
-  Button,
-  Grid,
-  GridItem,
-  HStack,
-  Text,
-  Show,
-} from "@chakra-ui/react";
+import { Button, Grid, GridItem, HStack, Text, Show } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { EditExistingEventButton } from "./components/EditExistingEventButton";
 import "font-awesome/css/font-awesome.min.css";
 import TableGrid from "./components/TableGrid";
+import { createTableData } from "./utilities/tableUtils"; // Import the utility function
 
 interface TableData {
   title: string;
@@ -62,45 +56,10 @@ const PlanBuilder = () => {
     size_normal_tables,
   } = eventInfo || {};
 
-  const numTopTablesNumber = parseInt(num_top_tables, 10);
-const sizeTopTablesNumber = parseInt(size_top_tables, 10);
-const numNormalTablesNumber = parseInt(num_normal_tables, 10);
-const sizeNormalTablesNumber = parseInt(size_normal_tables, 10);
+  const sizeNormalTablesNumber = parseInt(size_normal_tables, 10);
 
-
-  // Create tableData based on the fetched guests
-  const createTableData = () => {
-    let tables = [];
-    let currentTable: string[] = [];
-    let currentTableIndex = 1;
-
-    console.log("Size of normal tables:", size_normal_tables); // Debugging line
-    console.log("Type of size_normal_tables:", typeof size_normal_tables);
-    console.log("Guests:", guests); // Debugging line
-
-    guests.forEach((guest, index) => {
-      currentTable.push(guest.attendee_name);
-      if (currentTable.length === sizeNormalTablesNumber) {
-        tables.push({
-          title: `Table ${currentTableIndex}`,
-          names: [...currentTable],
-        });
-        currentTable = [];
-        currentTableIndex++;
-      }
-    });
-
-    if (currentTable.length > 0) {
-      tables.push({
-        title: `Table ${currentTableIndex}`,
-        names: [...currentTable],
-      });
-    }
-
-    return tables;
-  };
-
-  const tableData = createTableData();
+  // Use the utility function to create table data
+  const tableData = createTableData(guests, sizeNormalTablesNumber);
 
   return (
     <>
@@ -117,7 +76,13 @@ const sizeNormalTablesNumber = parseInt(size_normal_tables, 10);
         }}
       >
         <GridItem area="nav">
-          <HStack mt={6} mb={2} ml={2} width="100%" justifyContent="space-between">
+          <HStack
+            mt={6}
+            mb={2}
+            ml={2}
+            width="100%"
+            justifyContent="space-between"
+          >
             <HStack spacing={3}>
               <Button onClick={() => navigate("/home")}>
                 <i className="fa fa-home" style={{ fontSize: "30px" }}></i>
@@ -131,9 +96,7 @@ const sizeNormalTablesNumber = parseInt(size_normal_tables, 10);
 
             <HStack spacing={3} mr={6}>
               <EditExistingEventButton />
-              <Button onClick={() => navigate("/main")}>
-                Go Back To List
-              </Button>
+              <Button onClick={() => navigate("/main")}>Go Back To List</Button>
             </HStack>
           </HStack>
         </GridItem>
