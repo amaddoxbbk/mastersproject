@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useEvent } from "./components/EventContext";
 import axios from "axios";
-import GuestTable from "./components/GuestTable";
 import {
   Button,
   Grid,
   GridItem,
   HStack,
-  Box,
-  VStack,
   Text,
-  Table,
   Show,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
@@ -65,31 +61,46 @@ const PlanBuilder = () => {
     num_normal_tables,
     size_normal_tables,
   } = eventInfo || {};
-  const guestNames = guests.map((guest) => guest.attendee_name);
 
-  const tableData: TableData[] = [
-    {
-      title: "Table 1",
-      names: ["Alice Johnson", "Bob Smith", "Charlie Brown", "Diego Martinez", "Elena Rodriguez", "Fatima Khan", "Grace Lee", "Hiroshi Tanaka"],
-    },
-    {
-      title: "Table 2",
-      names: ["Isabella Garcia", "Jaden Williams", "Kavita Patel", "Liam O'Brien", "Ming Zhao", "Nadia Ali", "Oscar Diaz", "Priya Nair"],
-    },
-    {
-      title: "Table 3",
-      names: ["Quincy Adams", "Raj Koothrappali", "Samantha Kim", "Tariq Hussein", "Ursula Le Guin", "Viktor Ivanov", "Wendy Wu", "Xiaoming Li"],
-    },
-    {
-      title: "Table 4",
-      names: ["Yasmin Al-Sayyid", "Zachary Taylor", "Aiden Zhang", "Bianca Duarte", "Caleb Johnson", "Dalia Mahmoud", "Elijah Thomas", "Fiona MacLeod"],
-    },
-    {
-      title: "Table 5",
-      names: ["Gloria Ng", "Hassan El-Amin", "Ivy O'Connell", "Jasmine Turner", "Khalid Bin Walid", "Linda McCartney", "Mohammed Al-Fayed", "Nina Simone"],
-    },
-  ];
-  
+  const numTopTablesNumber = parseInt(num_top_tables, 10);
+const sizeTopTablesNumber = parseInt(size_top_tables, 10);
+const numNormalTablesNumber = parseInt(num_normal_tables, 10);
+const sizeNormalTablesNumber = parseInt(size_normal_tables, 10);
+
+
+  // Create tableData based on the fetched guests
+  const createTableData = () => {
+    let tables = [];
+    let currentTable: string[] = [];
+    let currentTableIndex = 1;
+
+    console.log("Size of normal tables:", size_normal_tables); // Debugging line
+    console.log("Type of size_normal_tables:", typeof size_normal_tables);
+    console.log("Guests:", guests); // Debugging line
+
+    guests.forEach((guest, index) => {
+      currentTable.push(guest.attendee_name);
+      if (currentTable.length === sizeNormalTablesNumber) {
+        tables.push({
+          title: `Table ${currentTableIndex}`,
+          names: [...currentTable],
+        });
+        currentTable = [];
+        currentTableIndex++;
+      }
+    });
+
+    if (currentTable.length > 0) {
+      tables.push({
+        title: `Table ${currentTableIndex}`,
+        names: [...currentTable],
+      });
+    }
+
+    return tables;
+  };
+
+  const tableData = createTableData();
 
   return (
     <>
@@ -112,9 +123,9 @@ const PlanBuilder = () => {
                 <i className="fa fa-home" style={{ fontSize: "30px" }}></i>
               </Button>
               <Show above="lg">
-              <Text fontSize="2xl" fontWeight="bold" color="black">
-                Welcome to {eventData.event_name}
-              </Text>
+                <Text fontSize="2xl" fontWeight="bold" color="black">
+                  Welcome to {eventData.event_name}
+                </Text>
               </Show>
             </HStack>
 
@@ -127,7 +138,7 @@ const PlanBuilder = () => {
           </HStack>
         </GridItem>
 
-        <GridItem area="aside" bg="red.500" mt={4}>
+        <GridItem area="aside" mt={4}>
           <div>
             <h2>Event ID: {eventData.event_id}</h2>
             <h2>Number of Top Tables: {num_top_tables}</h2>
