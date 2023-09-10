@@ -47,7 +47,19 @@ const PlanBuilder = () => {
       const guestsResponse = await axios.post("/api/getGuests", {
         event_id: eventData.event_id,
       });
+
+      // Filter out the bride and groom
+      const filteredGuestsResponse = guestsResponse.data.filter(
+        (guest: any) => !guest.is_bride && !guest.is_groom
+      );
+
       setGuests(guestsResponse.data);
+
+      const brideAndGroom = guestsResponse.data.filter(
+        (guest: any) => guest.is_bride || guest.is_groom
+      ).map((guest: any) => guest.attendee_name);
+
+      setTopTableGuests(brideAndGroom);
 
       const eventInfoResponse = await axios.post("/api/getOneEvent", {
         event_id: eventData.event_id,
@@ -87,11 +99,18 @@ const PlanBuilder = () => {
   };
 
   const handleModalSubmit = () => {
-    setTopTableGuests(selectedTopTableGuests);
+    // Always include the bride and groom in the top table
+    const brideAndGroom = guests.filter(
+      (guest) => guest.is_bride === true || guest.is_groom === true
+    ).map((guest) => guest.attendee_name);
+  
+    // Combine the selected top table guests with the bride and groom
+    const allTopTableGuests = [...new Set([...selectedTopTableGuests, ...brideAndGroom])];
+  
+    setTopTableGuests(allTopTableGuests);
     handleModalClose();
   };
   
-
   const handleGuestSelect = (guestName: string) => {
     if (selectedTopTableGuests.includes(guestName)) {
       setSelectedTopTableGuests(
@@ -104,6 +123,7 @@ const PlanBuilder = () => {
 
   const availableGuestOptions = guests
     .filter((guest) => !selectedTopTableGuests.includes(guest.attendee_name))
+    .filter((guest) => !guest.is_bride && !guest.is_groom)  // Exclude bride and groom here
     .map((guest) => ({
       value: guest.attendee_name,
       label: guest.attendee_name,
