@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { EditExistingEventButton } from "./components/EditExistingEventButton";
 import "font-awesome/css/font-awesome.min.css";
 import TableGrid from "./components/TableGrid";
-import { createTableData } from "./utilities/tableUtils"; // Import the utility function
+import { createTableData } from "./utilities/tableUtils";
 
 interface TableData {
   title: string;
@@ -18,36 +18,30 @@ const PlanBuilder = () => {
   const [guests, setGuests] = useState<any[]>([]);
   const [eventInfo, setEventInfo] = useState<any>(null);
   const navigate = useNavigate();
+  const [shouldRefetch, setShouldRefetch] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      const guestsResponse = await axios.post("/api/getGuests", {
+        event_id: eventData.event_id,
+      });
+      setGuests(guestsResponse.data);
+
+      const eventInfoResponse = await axios.post("/api/getOneEvent", {
+        event_id: eventData.event_id,
+      });
+      setEventInfo(eventInfoResponse.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchGuests = async () => {
-      try {
-        const response = await axios.post("/api/getGuests", {
-          event_id: eventData.event_id,
-        });
-        setGuests(response.data);
-      } catch (error) {
-        console.error("Error fetching guests:", error);
-      }
-    };
-
-    fetchGuests();
-  }, []);
-
-  useEffect(() => {
-    const fetchEventInfo = async () => {
-      try {
-        const response = await axios.post("/api/getOneEvent", {
-          event_id: eventData.event_id,
-        });
-        setEventInfo(response.data);
-      } catch (error) {
-        console.error("Error fetching event information:", error);
-      }
-    };
-
-    fetchEventInfo();
-  }, []);
+    fetchData();
+    if (shouldRefetch) {
+      setShouldRefetch(false);
+    }
+  }, [shouldRefetch]);
 
   const {
     num_top_tables,
@@ -59,16 +53,13 @@ const PlanBuilder = () => {
   const sizeNormalTablesNumber = parseInt(size_normal_tables, 10);
   const sizeTopTableNumber = parseInt(size_top_tables, 10);
 
-  // Use the utility function to create table data
   const tableData = createTableData(guests, sizeNormalTablesNumber, sizeTopTableNumber);
 
   return (
     <>
       <Grid
         templateAreas={{
-          base: `"nav " 
-        "aside"
-        "main"`,
+          base: `"nav" "aside" "main"`,
           lg: `"nav nav" "aside main"`,
         }}
         templateColumns={{
@@ -77,13 +68,7 @@ const PlanBuilder = () => {
         }}
       >
         <GridItem area="nav">
-          <HStack
-            mt={6}
-            mb={2}
-            ml={2}
-            width="100%"
-            justifyContent="space-between"
-          >
+          <HStack mt={6} mb={2} ml={2} width="100%" justifyContent="space-between">
             <HStack spacing={3}>
               <Button onClick={() => navigate("/home")}>
                 <i className="fa fa-home" style={{ fontSize: "30px" }}></i>
@@ -94,14 +79,12 @@ const PlanBuilder = () => {
                 </Text>
               </Show>
             </HStack>
-
             <HStack spacing={3} mr={6}>
-              <EditExistingEventButton />
+              <EditExistingEventButton setShouldRefetch={setShouldRefetch} />
               <Button onClick={() => navigate("/main")}>Go Back To List</Button>
             </HStack>
           </HStack>
         </GridItem>
-
         <GridItem area="aside" mt={4}>
           <div>
             <h2>Event ID: {eventData.event_id}</h2>
@@ -112,7 +95,6 @@ const PlanBuilder = () => {
             <h2>Guests:</h2>
           </div>
         </GridItem>
-
         <GridItem area="main">
           <TableGrid tables={tableData} />
         </GridItem>

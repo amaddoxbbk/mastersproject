@@ -13,7 +13,11 @@ const tableSchema = z.object({
   maxSizeNormalTable: z.number().min(0, "Negative number inputs not valid"),
 });
 
-export const EditExistingEventButton: React.FC = () => {
+interface EditExistingEventButtonProps {
+  setShouldRefetch: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const EditExistingEventButton: React.FC<EditExistingEventButtonProps> = ({ setShouldRefetch }) => {
   const { eventData } = useEvent(); // Use the context
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [numTopTables, setNumTopTables] = useState(0);
@@ -52,6 +56,7 @@ export const EditExistingEventButton: React.FC = () => {
 
   const onSuccess = () => {
     setShouldWriteData(false);
+    setShouldRefetch(true);  // Trigger a refetch in the parent component
   };
 
   const onFailure = (error: any) => {
