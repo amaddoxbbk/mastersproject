@@ -130,14 +130,38 @@ const PlanBuilder = () => {
   
   
   const handleGuestSelect = (guestName: string) => {
-    if (selectedTopTableGuests.includes(guestName)) {
-      setSelectedTopTableGuests(
-        selectedTopTableGuests.filter((item) => item !== guestName)
-      );
-    } else {
-      setSelectedTopTableGuests([...selectedTopTableGuests, guestName]);
+  // Create a bidirectional mapping for quick look-up
+  const partnerMapping: { [key: string]: string | null } = {};
+  const reversePartnerMapping: { [key: string]: string | null } = {};
+  
+  guests.forEach((guest) => {
+    partnerMapping[guest.attendee_name] = guest.partner_to ? guests.find(g => g.attendee_id === guest.partner_to)?.attendee_name : null;
+    if (guest.partner_to) {
+      reversePartnerMapping[guests.find(g => g.attendee_id === guest.partner_to)?.attendee_name || ''] = guest.attendee_name;
     }
-  };
+  });
+
+  // Find the partner of the selected guest
+  const partnerName = partnerMapping[guestName] || reversePartnerMapping[guestName] || null;
+
+  let updatedTopTableGuests = [...selectedTopTableGuests];
+
+  if (selectedTopTableGuests.includes(guestName)) {
+    // Remove the guest and their partner
+    updatedTopTableGuests = updatedTopTableGuests.filter((name) => name !== guestName && name !== partnerName);
+  } else {
+    // Add the guest and their partner
+    updatedTopTableGuests.push(guestName);
+    if (partnerName) {
+      updatedTopTableGuests.push(partnerName);
+    }
+  }
+
+  setSelectedTopTableGuests(updatedTopTableGuests);
+};
+
+  
+  
 
   const availableGuestOptions = guests
     .filter((guest) => !selectedTopTableGuests.includes(guest.attendee_name))
@@ -147,11 +171,29 @@ const PlanBuilder = () => {
       label: guest.attendee_name,
     }));
 
-  const removeTopTableGuest = (name: string) => {
-    setSelectedTopTableGuests(
-      selectedTopTableGuests.filter((item) => item !== name)
-    );
-  };
+    const removeTopTableGuest = (name: string) => {
+      // Create a bidirectional mapping for quick look-up
+      const partnerMapping: { [key: string]: string | null } = {};
+      const reversePartnerMapping: { [key: string]: string | null } = {};
+      
+      guests.forEach((guest) => {
+        partnerMapping[guest.attendee_name] = guest.partner_to ? guests.find(g => g.attendee_id === guest.partner_to)?.attendee_name : null;
+        if (guest.partner_to) {
+          reversePartnerMapping[guests.find(g => g.attendee_id === guest.partner_to)?.attendee_name || ''] = guest.attendee_name;
+        }
+      });
+    
+      // Find the partner of the selected guest
+      const partnerName = partnerMapping[name] || reversePartnerMapping[name] || null;
+    
+      let updatedTopTableGuests = [...selectedTopTableGuests];
+    
+      // Remove the guest and their partner
+      updatedTopTableGuests = updatedTopTableGuests.filter((guestName) => guestName !== name && guestName !== partnerName);
+    
+      setSelectedTopTableGuests(updatedTopTableGuests);
+    };
+    
 
   return (
     <>
