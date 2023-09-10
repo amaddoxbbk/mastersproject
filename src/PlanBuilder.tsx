@@ -20,6 +20,7 @@ import { createTableData } from "./utilities/tableUtils";
 import { ReusableModal } from "./components/ReusableModal";
 import GenericDropdown from "./components/GenericDropdown";
 import { Flex } from "@chakra-ui/react";
+import {z} from 'zod';
 
 interface TableData {
   title: string;
@@ -41,6 +42,7 @@ const PlanBuilder = () => {
     string[]
   >([]);
   const [topTableGuests, setTopTableGuests] = useState<string[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const fetchData = async () => {
     try {
@@ -87,6 +89,10 @@ const PlanBuilder = () => {
   const sizeNormalTablesNumber = parseInt(size_normal_tables, 10);
   const sizeTopTableNumber = parseInt(size_top_tables, 10);
 
+  const topTableSchema = z.object({
+    topTableGuests: z.array(z.string()).max(sizeTopTableNumber),
+  });
+
   const tableData = createTableData(
     filteredGuests,
     sizeNormalTablesNumber,
@@ -107,9 +113,21 @@ const PlanBuilder = () => {
     // Combine the selected top table guests with the bride and groom
     const allTopTableGuests = [...new Set([...selectedTopTableGuests, ...brideAndGroom])];
   
-    setTopTableGuests(allTopTableGuests);
-    handleModalClose();
+    // Validate using Zod
+    const validationResult = topTableSchema.safeParse({ topTableGuests: allTopTableGuests });
+
+    if (validationResult.success) {
+      setTopTableGuests(allTopTableGuests);
+      handleModalClose();
+      setErrorMessage(null); // Clear any existing error messages
+    } else {
+      // Calculate the number of excess guests
+      const excessGuests = allTopTableGuests.length - (sizeTopTableNumber);
+      // Set the validation error message
+      setErrorMessage(`Too many guests for the top table. Please remove ${excessGuests} guests.`);
+    }
   };
+  
   
   const handleGuestSelect = (guestName: string) => {
     if (selectedTopTableGuests.includes(guestName)) {
@@ -194,6 +212,7 @@ const PlanBuilder = () => {
     options={availableGuestOptions}
     title="Select Guests"
   />
+    {errorMessage && <Text color="red.500">{errorMessage}</Text>}
   {selectedTopTableGuests.length > 0 && (
         <Flex mt={2} flexWrap="wrap"> {/* Use Flex and set flexWrap to "wrap" */}
 
