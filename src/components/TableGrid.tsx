@@ -16,8 +16,15 @@ const TableGrid: React.FC<Props> = ({ tables }) => {
   const tableRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
+    // Reset minHeight for all tables before recalculating
+    tableRefs.current.forEach((table) => {
+      if (table) {
+        table.style.minHeight = 'auto';
+      }
+    });
+  
     let maxHeight = 0;
-
+  
     // Find the maximum height among all tables
     tableRefs.current.forEach((table) => {
       if (table) {
@@ -27,7 +34,7 @@ const TableGrid: React.FC<Props> = ({ tables }) => {
         }
       }
     });
-
+  
     // Set all tables to the maximum height
     tableRefs.current.forEach((table) => {
       if (table) {
@@ -35,6 +42,7 @@ const TableGrid: React.FC<Props> = ({ tables }) => {
       }
     });
   }, [tables]);
+  
 
 
   return (
