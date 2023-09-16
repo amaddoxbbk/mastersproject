@@ -120,6 +120,7 @@ export const MainPage = () => {
         )}
         return (
         <>
+          <EditExistingEventButton setShouldRefetch={setShouldRefetch} />
           <Button
             onClick={() => {
               if (hasTooManyGuests()) {

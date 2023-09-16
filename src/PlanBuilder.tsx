@@ -262,14 +262,6 @@ const PlanBuilder = () => {
           </HStack>
         </GridItem>
         <GridItem area="aside" mt={4}>
-          <div>
-            <h2>Number of Top Tables: {num_top_tables}</h2>
-            <h2>Size of Top Tables: {size_top_tables}</h2>
-            <h2>Number of Normal Tables: {num_normal_tables}</h2>
-            <h2>Size of Normal Tables: {size_normal_tables}</h2>
-          </div>
-        
-          {/* Conditionally render the "Assign Top Table" button and modal */}
         {num_top_tables > 0 && (
           <>
             <Button ml={2} onClick={() => setIsModalOpen(true)}>
