@@ -33,7 +33,7 @@ const PlanBuilder = () => {
   const [eventInfo, setEventInfo] = useState<any>(null);
   const navigate = useNavigate();
   const [shouldRefetch, setShouldRefetch] = useState(false);
-  const manuallySelectedTopTableNames = ["Andrew Maddox"];
+  const manuallySelectedTopTableNames = [""];
   const filteredGuests = guests.filter(
     (guest) => !manuallySelectedTopTableNames.includes(guest.attendee_name)
   );
@@ -88,6 +88,7 @@ const PlanBuilder = () => {
 
   const sizeNormalTablesNumber = parseInt(size_normal_tables, 10);
   const sizeTopTableNumber = parseInt(size_top_tables, 10);
+  const numTopTableNumber = parseInt(num_top_tables, 10);
 
   const topTableSchema = z.object({
     topTableGuests: z.array(z.string()).max(sizeTopTableNumber),
@@ -97,7 +98,8 @@ const PlanBuilder = () => {
     filteredGuests,
     sizeNormalTablesNumber,
     sizeTopTableNumber,
-    topTableGuests // Pass the state variable here
+    topTableGuests,
+    numTopTableNumber
   );
 
   const handleModalClose = () => {
@@ -261,54 +263,57 @@ const PlanBuilder = () => {
         </GridItem>
         <GridItem area="aside" mt={4}>
           <div>
-            <h2>Event ID: {eventData.event_id}</h2>
             <h2>Number of Top Tables: {num_top_tables}</h2>
             <h2>Size of Top Tables: {size_top_tables}</h2>
             <h2>Number of Normal Tables: {num_normal_tables}</h2>
             <h2>Size of Normal Tables: {size_normal_tables}</h2>
           </div>
-          <Button onClick={() => setIsModalOpen(true)}>
-            Assign Top Tablel
-          </Button>
-          <ReusableModal
-            isOpen={isModalOpen}
-            onClose={handleModalClose}
-            title="Select Top Table Guests"
-            handleSubmit={handleModalSubmit}
-          >
-            <GenericDropdown
-              onSelect={handleGuestSelect}
-              selectedValue={selectedTopTableGuests}
-              options={sortedAvailableGuestOptions}
-              title="Select Guests"
-            />
-            {errorMessage && <Text color="red.500">{errorMessage}</Text>}
-            {selectedTopTableGuests.length > 0 && (
-              <Flex mt={2} flexWrap="wrap">
-                {" "}
-                {/* Use Flex and set flexWrap to "wrap" */}
-                {selectedTopTableGuests.map((name, index) => (
-                  <Tag
-                    size="md"
-                    key={index}
-                    variant="solid"
-                    colorScheme="blue"
-                    m={1}
-                  >
-                    <TagLabel>{name}</TagLabel>
-                    <TagCloseButton onClick={() => removeTopTableGuest(name)} />
-                  </Tag>
-                ))}
-              </Flex>
-            )}
-          </ReusableModal>
-        </GridItem>
-        <GridItem area="main">
-          <TableGrid tables={tableData} />
-        </GridItem>
-      </Grid>
-    </>
-  );
-};
+        
+          {/* Conditionally render the "Assign Top Table" button and modal */}
+        {num_top_tables > 0 && (
+          <>
+            <Button ml={2} onClick={() => setIsModalOpen(true)}>
+              Assign Top Table
+            </Button>
+            <ReusableModal
+              isOpen={isModalOpen}
+              onClose={handleModalClose}
+              title="Select Top Table Guests"
+              handleSubmit={handleModalSubmit}
+            >
+              <GenericDropdown
+                onSelect={handleGuestSelect}
+                selectedValue={selectedTopTableGuests}
+                options={sortedAvailableGuestOptions}
+                title="Select Guests"
+              />
+              {errorMessage && <Text color="red.500">{errorMessage}</Text>}
+              {selectedTopTableGuests.length > 0 && (
+                <Flex mt={2} flexWrap="wrap">
+                  {selectedTopTableGuests.map((name, index) => (
+                    <Tag
+                      size="md"
+                      key={index}
+                      variant="solid"
+                      colorScheme="blue"
+                      m={1}
+                    >
+                      <TagLabel>{name}</TagLabel>
+                      <TagCloseButton onClick={() => removeTopTableGuest(name)} />
+                    </Tag>
+                  ))}
+                </Flex>
+              )}
+            </ReusableModal>
+          </>
+        )}
+      </GridItem>
+      <GridItem area="main">
+        <TableGrid tables={tableData} />
+      </GridItem>
+    </Grid>
+  </>
+);
+}
 
 export default PlanBuilder;

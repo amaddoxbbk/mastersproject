@@ -25,9 +25,7 @@ const newEventSchema = z
       .number()
       .min(0, "Negative number inputs not valid")
       .max(1, "You cannot have more than one top table"),
-    maxSizeTopTable: z
-      .number()
-      .min(1, "Max size of top table must be greater than zero"),
+    maxSizeTopTable: z.number(),
     numNormalTables: z.number().min(0, "Negative number inputs not valid"),
     maxSizeNormalTable: z
       .number()
@@ -45,7 +43,21 @@ const newEventSchema = z
         "You have entered a top table size with no top table. Please set table size to zero or add a top table",
       path: ["numTopTables", "maxSizeTopTable"],
     }
+  )
+  .refine(
+    (data) => {
+      if (data.numTopTables === 1) {
+        return data.maxSizeTopTable > 0;
+      }
+      return true;
+    },
+    {
+      message: "Max size of top table must be greater than zero",
+      path: ["maxSizeTopTable"],
+    }
   );
+
+
 
 interface CreateNewEventButtonProps {
   handleNewEventSubmit: (
@@ -84,6 +96,10 @@ export const CreateNewEventButton: React.FC<CreateNewEventButtonProps> = ({
       numNormalTables,
       maxSizeNormalTable,
     });
+
+    if (numTopTables === 0) {
+      setMaxSizeTopTable(0);
+    }
 
     if (!parsedData.success) {
       const errors: { [key: string]: string } = {};
@@ -156,17 +172,22 @@ export const CreateNewEventButton: React.FC<CreateNewEventButtonProps> = ({
           onChange={(e) => setNumTopTables(parseInt(e.target.value))}
         />
       </FormControl>
-      <FormControl>
-        {fieldErrors.maxSizeTopTable && (
-          <div style={{ color: "red" }}>{fieldErrors.maxSizeTopTable}</div>
-        )}
-        <FormLabel mb={1}>Max Size of Top Table</FormLabel>
-        <Input
-          type="number"
-          value={maxSizeTopTable}
-          onChange={(e) => setMaxSizeTopTable(parseInt(e.target.value))}
-        />
-      </FormControl>
+
+
+      {/* Conditionally render Max Size of Top Table */}
+      {numTopTables > 0 && (
+          <FormControl>
+            {fieldErrors.maxSizeTopTable && (
+              <div style={{ color: "red" }}>{fieldErrors.maxSizeTopTable}</div>
+            )}
+            <FormLabel mb={1}>Max Size of Top Table</FormLabel>
+            <Input
+              type="number"
+              value={maxSizeTopTable}
+              onChange={(e) => setMaxSizeTopTable(parseInt(e.target.value))}
+            />
+          </FormControl>)}
+
       <FormControl>
         {fieldErrors.numNormalTables && (
           <div style={{ color: "red" }}>{fieldErrors.numNormalTables}</div>
