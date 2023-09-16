@@ -1,74 +1,63 @@
-// Define the shape of the table data
-interface TableData {
-  title: string;
-  names: string[];
-}
+// tableUtils.ts
+
+import { generateRandomTable, TableData } from "./seatingUtilities";
 
 export const createTableData = (
   guests: any[],
   sizeNormalTablesNumber: number,
   sizeTopTableNumber: number,
   topTableGuests: string[],
-  numTopTables: number,
-  numNormalTables: number
+  numTopTableNumber: number,
+  numNormalTableNumber: number
 ) => {
+  console.log("Initial input parameters:", {
+    guests,
+    sizeNormalTablesNumber,
+    sizeTopTableNumber,
+    topTableGuests,
+    numTopTableNumber,
+    numNormalTableNumber,
+  });
+
   let tables: TableData[] = [];
-  let currentTable: string[] = [];
-  let currentTableIndex = 1;
 
-  // Find the bride and groom
-  const brideAndGroom = guests.filter((guest: any) => guest.is_bride || guest.is_groom)
-                              .map((guest: any) => guest.attendee_name);
+  const brideAndGroom = guests
+  .filter((guest: any) => guest.is_bride || guest.is_groom)
+  .map((guest: any) => guest.attendee_name);
+console.log("Bride and Groom:", brideAndGroom);
 
-  // Create a Set to hold unique names for the top table
-  const uniqueTopTableGuests = new Set([...topTableGuests, ...(numTopTables > 0 ? brideAndGroom : [])]);
+// Create a Set to hold unique names for the top table
+const uniqueTopTableGuests = new Set([...topTableGuests, ...brideAndGroom]);
+console.log("Unique top table guests:", uniqueTopTableGuests);
 
-  // Conditionally add the selected top table guests to the tables array
-  if (numTopTables > 0) {
+  // Define remaining guests based on whether there are top tables or not
+  let remainingGuests: any[];
+
+  // If top tables are specified, add them manually to tables
+  if (numTopTableNumber > 0) {
     tables.push({
-      title: "Top Table",
-      names: Array.from(uniqueTopTableGuests),
+      title: `Top Table ${numTopTableNumber}`,
+      names: Array.from(uniqueTopTableGuests).slice(0, sizeTopTableNumber),
     });
+    // Remove top table guests from the guest list
+    remainingGuests = guests.filter(
+      (guest: any) => !uniqueTopTableGuests.has(guest.attendee_name)
+    );
   } else {
-    // If numTopTables is 0, check if adding the bride and groom would exceed the table size
-    if (currentTable.length + brideAndGroom.length <= sizeNormalTablesNumber) {
-      currentTable.push(...brideAndGroom);
-      console.log('Added bride and groom to currentTable:', currentTable);  // Debugging line
-
-    } else {
-      // If it would, create a new table for them
-      tables.push({
-        title: `Table ${currentTableIndex}`,
-        names: [...currentTable],
-      });
-      currentTable = [...brideAndGroom];
-      currentTableIndex++;
-    }
+    // When no top table is specified, include topTableGuests in the normal table arrangement
+    remainingGuests = guests;
   }
+  console.log("Tables after adding top table if applicable:", tables);
 
-  // Populate the remaining normal tables
-  for (let i = 0; i < guests.length; i++) {
-    const guest = guests[i];
-    if (!uniqueTopTableGuests.has(guest.attendee_name)) {
-      currentTable.push(guest.attendee_name);
-      if (currentTable.length === sizeNormalTablesNumber) {
-        tables.push({
-          title: `Table ${currentTableIndex}`,
-          names: [...currentTable],
-        });
-        currentTable = [];
-        currentTableIndex++;
-      }
-    }
-  }
+  console.log("Remaining guests:", remainingGuests);
 
-  // Add any remaining guests to the last table
-  if (currentTable.length > 0) {
-    tables.push({
-      title: `Table ${currentTableIndex}`,
-      names: [...currentTable],
-    });
-  }
+  // Generate random tables for remaining guests
+  const randomTables = generateRandomTable(remainingGuests, sizeNormalTablesNumber);
+  console.log("Randomly generated tables:", randomTables);
+
+  // Combine the top table(s) with the randomly generated tables
+  tables = [...tables, ...randomTables];
+  console.log("Final tables:", tables);
 
   return tables;
 };
