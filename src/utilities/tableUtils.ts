@@ -4,20 +4,17 @@ interface TableData {
   names: string[];
 }
 
-
 export const createTableData = (
   guests: any[],
   sizeNormalTablesNumber: number,
   sizeTopTableNumber: number,
-  topTableGuests: string[], // New argument for top table guests
-  numTopTables: number
+  topTableGuests: string[],
+  numTopTables: number,
+  numNormalTables: number
 ) => {
   let tables: TableData[] = [];
   let currentTable: string[] = [];
   let currentTableIndex = 1;
-
-  console.log('All guests 1:', guests);
-
 
   // Find the bride and groom
   const brideAndGroom = guests.filter((guest: any) => guest.is_bride || guest.is_groom)
