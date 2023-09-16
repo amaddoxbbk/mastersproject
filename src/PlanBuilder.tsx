@@ -11,6 +11,7 @@ import {
   Tag,
   TagLabel,
   TagCloseButton,
+  Box,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { EditExistingEventButton } from "./components/EditExistingEventButton";
@@ -214,16 +215,17 @@ const PlanBuilder = () => {
     setSelectedTopTableGuests(updatedTopTableGuests);
   };
 
-  const sortedAvailableGuestOptions = [...availableGuestOptions].sort((a, b) => {
-    if (a.label < b.label) {
-      return -1;
+  const sortedAvailableGuestOptions = [...availableGuestOptions].sort(
+    (a, b) => {
+      if (a.label < b.label) {
+        return -1;
+      }
+      if (a.label > b.label) {
+        return 1;
+      }
+      return 0;
     }
-    if (a.label > b.label) {
-      return 1;
-    }
-    return 0;
-  });
-  
+  );
 
   return (
     <>
@@ -262,50 +264,55 @@ const PlanBuilder = () => {
           </HStack>
         </GridItem>
         <GridItem area="aside" mt={4}>
-        {num_top_tables > 0 && (
-          <>
-            <Button ml={2} onClick={() => setIsModalOpen(true)}>
-              Assign Top Table
-            </Button>
-            <ReusableModal
-              isOpen={isModalOpen}
-              onClose={handleModalClose}
-              title="Select Top Table Guests"
-              handleSubmit={handleModalSubmit}
-            >
-              <GenericDropdown
-                onSelect={handleGuestSelect}
-                selectedValue={selectedTopTableGuests}
-                options={sortedAvailableGuestOptions}
-                title="Select Guests"
-              />
-              {errorMessage && <Text color="red.500">{errorMessage}</Text>}
-              {selectedTopTableGuests.length > 0 && (
-                <Flex mt={2} flexWrap="wrap">
-                  {selectedTopTableGuests.map((name, index) => (
-                    <Tag
-                      size="md"
-                      key={index}
-                      variant="solid"
-                      colorScheme="blue"
-                      m={1}
-                    >
-                      <TagLabel>{name}</TagLabel>
-                      <TagCloseButton onClick={() => removeTopTableGuest(name)} />
-                    </Tag>
-                  ))}
-                </Flex>
-              )}
-            </ReusableModal>
-          </>
-        )}
-      </GridItem>
-      <GridItem area="main">
-        <TableGrid tables={tableData} />
-      </GridItem>
-    </Grid>
-  </>
-);
-}
+          <Box display="flex" justifyContent="center" alignItems="center">
+            {num_top_tables > 0 && (
+              <>
+                <Button onClick={() => setIsModalOpen(true)}>
+                  Assign Top Table
+                </Button>
+                <ReusableModal
+                  isOpen={isModalOpen}
+                  onClose={handleModalClose}
+                  title="Select Top Table Guests"
+                  handleSubmit={handleModalSubmit}
+                >
+                  <GenericDropdown
+                    onSelect={handleGuestSelect}
+                    selectedValue={selectedTopTableGuests}
+                    options={sortedAvailableGuestOptions}
+                    title="Select Guests"
+                  />
+                  {errorMessage && <Text color="red.500">{errorMessage}</Text>}
+                  {selectedTopTableGuests.length > 0 && (
+                    <Flex mt={2} flexWrap="wrap">
+                      {selectedTopTableGuests.map((name, index) => (
+                        <Tag
+                          size="md"
+                          key={index}
+                          variant="solid"
+                          colorScheme="blue"
+                          m={1}
+                        >
+                          <TagLabel>{name}</TagLabel>
+                          <TagCloseButton
+                            onClick={() => removeTopTableGuest(name)}
+                          />
+                        </Tag>
+                      ))}
+                    </Flex>
+                  )}
+                </ReusableModal>
+              </>
+            )}
+          </Box>
+        </GridItem>
+
+        <GridItem area="main">
+          <TableGrid tables={tableData} />
+        </GridItem>
+      </Grid>
+    </>
+  );
+};
 
 export default PlanBuilder;
