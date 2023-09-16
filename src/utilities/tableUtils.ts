@@ -1,6 +1,7 @@
 // tableUtils.ts
 
 import { generateRandomTable, TableData } from "./seatingUtilities";
+import { calculateFitness } from './fitnessFunction';  // Importing the calculateFitness function
 
 export const createTableData = (
   guests: any[],
@@ -22,13 +23,13 @@ export const createTableData = (
   let tables: TableData[] = [];
 
   const brideAndGroom = guests
-  .filter((guest: any) => guest.is_bride || guest.is_groom)
-  .map((guest: any) => guest.attendee_name);
-console.log("Bride and Groom:", brideAndGroom);
+    .filter((guest: any) => guest.is_bride || guest.is_groom)
+    .map((guest: any) => guest.attendee_name);
+  console.log("Bride and Groom:", brideAndGroom);
 
-// Create a Set to hold unique names for the top table
-const uniqueTopTableGuests = new Set([...topTableGuests, ...brideAndGroom]);
-console.log("Unique top table guests:", uniqueTopTableGuests);
+  // Create a Set to hold unique names for the top table
+  const uniqueTopTableGuests = new Set([...topTableGuests, ...brideAndGroom]);
+  console.log("Unique top table guests:", uniqueTopTableGuests);
 
   // Define remaining guests based on whether there are top tables or not
   let remainingGuests: any[];
@@ -58,6 +59,10 @@ console.log("Unique top table guests:", uniqueTopTableGuests);
   // Combine the top table(s) with the randomly generated tables
   tables = [...tables, ...randomTables];
   console.log("Final tables:", tables);
+
+  // Calculate the fitness score of the table arrangement
+  const fitnessScore = calculateFitness(tables, guests);
+  console.log("Fitness Score:", fitnessScore);  // Writing the fitness score to the console
 
   return tables;
 };
