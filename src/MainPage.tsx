@@ -19,6 +19,7 @@ import { RemoveGuestButton } from "./components/RemoveGuestButton";
 import { RemoveCoupleButton } from "./components/RemoveCoupleButton";
 import { EditExistingEventButton } from "./components/EditExistingEventButton";
 import { useNavigate } from "react-router-dom";
+import { ReusableModal } from "./components/ReusableModal";
 
 export const MainPage = () => {
   const navigate = useNavigate();
@@ -26,23 +27,43 @@ export const MainPage = () => {
   const [guests, setGuests] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [shouldRefetch, setShouldRefetch] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [eventInfo, setEventInfo] = useState<any>(null);
 
-  const fetchGuests = async () => {
-    setIsLoading(true);
+  const fetchData = async () => {
     try {
-      const response = await axios.post("/api/getGuests", {
+      const eventInfoResponse = await axios.post("/api/getOneEvent", {
         event_id: eventData.event_id,
       });
-      setGuests(response.data);
+      setEventInfo(eventInfoResponse.data);
     } catch (error) {
-      console.error("Error fetching guests:", error);
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const fetchAllData = async () => {
+    setIsLoading(true);
+    try {
+      const [guestsResponse, eventInfoResponse] = await Promise.all([
+        axios.post("/api/getGuests", {
+          event_id: eventData.event_id,
+        }),
+        axios.post("/api/getOneEvent", {
+          event_id: eventData.event_id,
+        }),
+      ]);
+
+      setGuests(guestsResponse.data);
+      setEventInfo(eventInfoResponse.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
     setIsLoading(false);
   };
 
   useEffect(() => {
     if (shouldRefetch || eventData.event_id) {
-      fetchGuests();
+      fetchAllData(); // This will now fetch both guests and event information
       setShouldRefetch(false);
     }
   }, [shouldRefetch, eventData.event_id]);
@@ -53,6 +74,25 @@ export const MainPage = () => {
   const couple = guests
     .filter((guest) => guest.is_bride === true || guest.is_groom === true)
     .map((guest) => guest.attendee_name);
+
+  const {
+    num_top_tables,
+    size_top_tables,
+    num_normal_tables,
+    size_normal_tables,
+  } = eventInfo || {};
+
+  console.log(eventInfo);
+
+  const totalEventCapacity =
+    num_top_tables * size_top_tables + num_normal_tables * size_normal_tables;
+
+  console.log(totalEventCapacity);
+
+  const hasTooManyGuests = () => {
+    const totalGuests = guestCount + 2; // including bride and groom
+    return totalGuests > totalEventCapacity;
+  };
 
   return (
     <Box p={8}>
@@ -78,9 +118,35 @@ export const MainPage = () => {
             setShouldRefetch={setShouldRefetch}
           />
         )}
-        <Button onClick={() => navigate("/plan-builder")}>
-          Go To Plan Builder
-        </Button>
+        return (
+        <>
+          <Button
+            onClick={() => {
+              if (hasTooManyGuests()) {
+                setIsModalOpen(true);
+              } else {
+                navigate("/plan-builder");
+              }
+            }}
+          >
+            Go To Plan Builder
+          </Button>
+          {isModalOpen && (
+            <ReusableModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              title="Warning"
+              handleSubmit={() => setIsModalOpen(false)}
+            >
+              <p>
+                The total capacity for this event is {totalEventCapacity} but
+                you have {guestCount + 2} guests. Please remove{" "}
+                {guestCount + 2 - totalEventCapacity} guests before continuing.
+              </p>
+            </ReusableModal>
+          )}
+        </>
+        );
       </HStack>
 
       <Table mt={4} variant="simple">
