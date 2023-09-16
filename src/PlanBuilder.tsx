@@ -22,6 +22,7 @@ import { ReusableModal } from "./components/ReusableModal";
 import GenericDropdown from "./components/GenericDropdown";
 import { Flex } from "@chakra-ui/react";
 import { z } from "zod";
+import PlanBuilderNavBar from "./components/PlanBuilderNavBar";
 
 interface TableData {
   title: string;
@@ -240,28 +241,7 @@ const PlanBuilder = () => {
         }}
       >
         <GridItem area="nav">
-          <HStack
-            mt={6}
-            mb={2}
-            ml={2}
-            width="100%"
-            justifyContent="space-between"
-          >
-            <HStack spacing={3}>
-              <Button onClick={() => navigate("/home")}>
-                <i className="fa fa-home" style={{ fontSize: "30px" }}></i>
-              </Button>
-              <Show above="lg">
-                <Text fontSize="2xl" fontWeight="bold" color="black">
-                  Welcome to {eventData.event_name}
-                </Text>
-              </Show>
-            </HStack>
-            <HStack spacing={3} mr={6}>
-              <EditExistingEventButton setShouldRefetch={setShouldRefetch} />
-              <Button onClick={() => navigate("/main")}>Go Back To List</Button>
-            </HStack>
-          </HStack>
+          <PlanBuilderNavBar setShouldRefetch={setShouldRefetch} />
         </GridItem>
         <GridItem area="aside" mt={4}>
           <Box display="flex" justifyContent="center" alignItems="center">
