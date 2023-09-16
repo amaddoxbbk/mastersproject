@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react";
+import { Button, FormControl, FormErrorMessage, FormLabel, Input, Stack } from "@chakra-ui/react";
 import { ReusableModal } from "./ReusableModal";
 import { z } from "zod";
 import WriteData from "./WriteData"; // Import WriteData
@@ -7,7 +7,7 @@ import { useEvent } from "./EventContext"; // Import the context
 import axios from "axios";
 
 const tableSchema = z.object({
-  numTopTables: z.number().min(0, "Negative number inputs not valid"),
+  numTopTables: z.number().min(0, "Negative number inputs not valid").max(1, "Only one top table allowed"),
   maxSizeTopTable: z.number().min(0, "Negative number inputs not valid"),
   numNormalTables: z.number().min(0, "Negative number inputs not valid"),
   maxSizeNormalTable: z.number().min(0, "Negative number inputs not valid"),
@@ -56,7 +56,8 @@ export const EditExistingEventButton: React.FC<EditExistingEventButtonProps> = (
 
   const onSuccess = () => {
     setShouldWriteData(false);
-    setShouldRefetch(true);  // Trigger a refetch in the parent component
+    setShouldRefetch(true);
+    setFieldErrors({});
   };
 
   const onFailure = (error: any) => {
@@ -92,40 +93,45 @@ export const EditExistingEventButton: React.FC<EditExistingEventButtonProps> = (
 
   const editEventForm = (
     <Stack spacing={6}>
-      <FormControl isDisabled={isLoading}> 
+      <FormControl isInvalid={fieldErrors['numTopTables'] ? true : false} isDisabled={isLoading}> 
         <FormLabel>Number of Top Tables</FormLabel>
         <Input
           type="number"
           value={numTopTables}
           onChange={(e) => setNumTopTables(parseInt(e.target.value))}
         />
+        {fieldErrors['numTopTables'] && <FormErrorMessage>{fieldErrors['numTopTables']}</FormErrorMessage>}
       </FormControl>
-      <FormControl isDisabled={isLoading}> 
+      <FormControl isInvalid={fieldErrors['maxSizeTopTable'] ? true : false} isDisabled={isLoading}> 
         <FormLabel>Max Size of Top Table</FormLabel>
         <Input
           type="number"
           value={maxSizeTopTable}
           onChange={(e) => setMaxSizeTopTable(parseInt(e.target.value))}
         />
+        {fieldErrors['maxSizeTopTable'] && <FormErrorMessage>{fieldErrors['maxSizeTopTable']}</FormErrorMessage>}
       </FormControl>
-      <FormControl isDisabled={isLoading}> 
+      <FormControl isInvalid={fieldErrors['numNormalTables'] ? true : false} isDisabled={isLoading}> 
         <FormLabel>Number of Normal Tables</FormLabel>
         <Input
           type="number"
           value={numNormalTables}
           onChange={(e) => setNumNormalTables(parseInt(e.target.value))}
         />
+        {fieldErrors['numNormalTables'] && <FormErrorMessage>{fieldErrors['numNormalTables']}</FormErrorMessage>}
       </FormControl>
-      <FormControl isDisabled={isLoading}> 
+      <FormControl isInvalid={fieldErrors['maxSizeNormalTable'] ? true : false} isDisabled={isLoading}> 
         <FormLabel>Max Size of Normal Table</FormLabel>
         <Input
           type="number"
           value={maxSizeNormalTable}
           onChange={(e) => setMaxSizeNormalTable(parseInt(e.target.value))}
         />
+        {fieldErrors['maxSizeNormalTable'] && <FormErrorMessage>{fieldErrors['maxSizeNormalTable']}</FormErrorMessage>}
       </FormControl>
     </Stack>
   );
+  
 
   return (
     <>
