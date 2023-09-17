@@ -104,59 +104,45 @@ export const MainPage = () => {
         </VStack>
       </Box>
     </GridItem>
-      <GridItem area="main">
-        <Box>
-          <Table mt={4} variant="simple">
-            <Thead>
-              <Tr>
-                <Th>Guest Name</Th>
-                <Th>Relationship</Th>
-                <Th>Plus One</Th>
-                <Th>Cannot Sit With</Th>
+    <GridItem area="main">
+  <Box>
+    <Table mt={4} variant="simple">
+      <Thead>
+        <Tr>
+          <Th>Guest Name</Th>
+          <Th>Relationship</Th>
+          <Th>Plus One</Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {isLoading ? (
+          <Tr>
+            <Td>Loading...</Td>
+          </Tr>
+        ) : guests.length > 0 ? (
+          guests
+            .filter((guest) => !guest.is_groom && !guest.is_bride)
+            .filter((guest) => !guest.partner_to)
+            .map((guest, index) => (
+              <Tr key={index}>
+                <Td>{guest.attendee_name}</Td>
+                <Td>{guest.relationship || "-"}</Td>
+                <Td>
+                  {guests.find(
+                    (plusOne) => plusOne.partner_to === guest.attendee_id
+                  )?.attendee_name || "-"}
+                </Td>
               </Tr>
-            </Thead>
-            <Tbody>
-              {isLoading ? (
-                <Tr>
-                  <Td>Loading...</Td>
-                </Tr>
-              ) : guests.length > 0 ? (
-                guests
-                  .filter((guest) => !guest.is_groom && !guest.is_bride)
-                  .filter((guest) => !guest.partner_to)
-                  .map((guest, index) => (
-                    <Tr key={index}>
-                      <Td>{guest.attendee_name}</Td>
-                      <Td>{guest.relationship || "-"}</Td>
-                      <Td>
-                        {guests.find(
-                          (plusOne) => plusOne.partner_to === guest.attendee_id
-                        )?.attendee_name || "-"}
-                      </Td>
-                      <Td>
-                        {guest.blacklist_attendee_ids &&
-                        guest.blacklist_attendee_ids.length > 0
-                          ? guest.blacklist_attendee_ids
-                              .map(
-                                (id: number) =>
-                                  guests.find((g) => g.attendee_id === id)
-                                    ?.attendee_name
-                              )
-                              .filter(Boolean)
-                              .join(", ") || "-"
-                          : "-"}
-                      </Td>
-                    </Tr>
-                  ))
-              ) : (
-                <Tr>
-                  <Td>No guests added yet</Td>
-                </Tr>
-              )}
-            </Tbody>
-          </Table>
-        </Box>
-      </GridItem>
+            ))
+        ) : (
+          <Tr>
+            <Td>No guests added yet</Td>
+          </Tr>
+        )}
+      </Tbody>
+    </Table>
+  </Box>
+</GridItem>
     </Grid>
   );
 };
