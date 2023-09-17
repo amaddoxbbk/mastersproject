@@ -10,7 +10,9 @@ import {
   Grid,
   GridItem,
   VStack,
-  useBreakpointValue
+  useBreakpointValue,
+  HStack,
+  Center
 } from "@chakra-ui/react";
 import { AddGuestButton } from "./components/AddGuestButton";
 import { AddCoupleButton } from "./components/AddCoupleButton";
@@ -81,28 +83,53 @@ export const MainPage = () => {
 
       <GridItem area="aside" mt={2}>
       <Box>
-        <VStack spacing={4} mt={4}>
-          {brideCount + groomCount !== 2 && (
-            <AddCoupleButton setShouldRefetch={setShouldRefetch} />
-          )}
-          {brideCount + groomCount === 2 && guestCount === 0 && (
-            <RemoveCoupleButton setShouldRefetch={setShouldRefetch} />
-          )}
-          {brideCount + groomCount === 2 && (
-            <AddGuestButton
-              guests={guests}
-              setShouldRefetch={setShouldRefetch}
-            />
-          )}
-          {brideCount + groomCount === 2 && guestCount > 0 && (
-            <RemoveGuestButton
-              guests={guests}
-              setShouldRefetch={setShouldRefetch}
-            />
-          )}
-          <EditExistingEventButton setShouldRefetch={setShouldRefetch} />
-        </VStack>
+      <VStack spacing={4} mt={4} display={{ base: "none", lg: "flex" }}>
+        {brideCount + groomCount !== 2 && (
+          <AddCoupleButton setShouldRefetch={setShouldRefetch} />
+        )}
+        {brideCount + groomCount === 2 && guestCount === 0 && (
+          <RemoveCoupleButton setShouldRefetch={setShouldRefetch} />
+        )}
+        {brideCount + groomCount === 2 && (
+          <AddGuestButton
+            guests={guests}
+            setShouldRefetch={setShouldRefetch}
+          />
+        )}
+        {brideCount + groomCount === 2 && guestCount > 0 && (
+          <RemoveGuestButton
+            guests={guests}
+            setShouldRefetch={setShouldRefetch}
+          />
+        )}
+        <EditExistingEventButton setShouldRefetch={setShouldRefetch} />
+    </VStack>
       </Box>
+
+      <Box display="flex" justifyContent="center" alignItems="center">
+      <HStack spacing={4} mt={4} display={{ base: "flex", lg: "none" }}>
+        {brideCount + groomCount !== 2 && (
+          <AddCoupleButton setShouldRefetch={setShouldRefetch} />
+        )}
+        {brideCount + groomCount === 2 && guestCount === 0 && (
+          <RemoveCoupleButton setShouldRefetch={setShouldRefetch} />
+        )}
+        {brideCount + groomCount === 2 && (
+          <AddGuestButton
+            guests={guests}
+            setShouldRefetch={setShouldRefetch}
+          />
+        )}
+        {brideCount + groomCount === 2 && guestCount > 0 && (
+          <RemoveGuestButton
+            guests={guests}
+            setShouldRefetch={setShouldRefetch}
+          />
+        )}
+        <EditExistingEventButton setShouldRefetch={setShouldRefetch} />
+    </HStack>
+      </Box>
+
     </GridItem>
     <GridItem area="main">
   <Box>
