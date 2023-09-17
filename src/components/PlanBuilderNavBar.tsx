@@ -34,7 +34,6 @@ const PlanBuilderNavBar: React.FC<PlanBuilderNavBarProps> = ({ setShouldRefetch 
         </Show>
       </HStack>
       <HStack spacing={3} mr={6}>
-        <EditExistingEventButton setShouldRefetch={setShouldRefetch} />
         <Button onClick={() => navigate('/main')}>Go Back To List</Button>
       </HStack>
     </HStack>
