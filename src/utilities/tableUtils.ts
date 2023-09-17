@@ -1,7 +1,6 @@
 // tableUtils.ts
 
-import { generateRandomTable, TableData } from "./seatingUtilities";
-import { calculateFitness } from './fitnessFunction';  // Importing the calculateFitness function
+import { TableData } from "./seatingUtilities";
 import { runGeneticAlgorithm } from './geneticAlgorithm';  // Import the main Genetic Algorithm function
 
 export const createTableData = (
@@ -49,12 +48,14 @@ export const createTableData = (
     // When no top table is specified, include topTableGuests in the normal table arrangement
     remainingGuests = guests;
   }
+  const uniqueRelationships = new Set(guests.map((guest) => guest.relationship));
 
   // Generate the remaining tables using the Genetic Algorithm
   const optimizedRemainingGuestTables = runGeneticAlgorithm(
     remainingGuests,
     sizeNormalTablesNumber,
-    numNormalTableNumber
+    numNormalTableNumber,
+    uniqueRelationships
   );
 
   // Combine the top table(s) with the randomly generated tables
