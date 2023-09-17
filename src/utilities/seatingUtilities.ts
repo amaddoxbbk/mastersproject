@@ -43,21 +43,17 @@ export interface TableData {
         // It's a group
         if (currentTable.length <= sizeNormalTablesNumber - 2) {
           currentTable.push(guestOrGroup[0].attendee_name, guestOrGroup[1].attendee_name);
-          console.log(`Adding ${guestOrGroup[0].attendee_name} and ${guestOrGroup[1].attendee_name} to the current table.`);
         } else {
           tables.push({
             title: `Table ${currentTableIndex}`,
             names: [...currentTable]
           });
-          console.log(`Closing Table ${currentTableIndex} with names: ${currentTable}`);
           currentTable = [guestOrGroup[0].attendee_name, guestOrGroup[1].attendee_name];
-          console.log(`Starting a new table with ${guestOrGroup[0].attendee_name} and ${guestOrGroup[1].attendee_name}`);
           currentTableIndex++;
         }
       } else {
         // It's a single
         currentTable.push(guestOrGroup.attendee_name);
-        console.log(`Adding ${guestOrGroup.attendee_name} to the current table.`);
       }
   
       if (currentTable.length === sizeNormalTablesNumber) {
@@ -65,7 +61,6 @@ export interface TableData {
           title: `Table ${currentTableIndex}`,
           names: [...currentTable]
         });
-        console.log(`Closing Table ${currentTableIndex} with names: ${currentTable}`);
         currentTable = [];
         currentTableIndex++;
       }
@@ -77,10 +72,8 @@ export interface TableData {
         title: `Table ${currentTableIndex}`,
         names: [...currentTable]
       });
-      console.log(`Closing Table ${currentTableIndex} with remaining names: ${currentTable}`);
     }
   
-    console.log("Final tables:", tables);
     return tables;
   };
   

@@ -2,11 +2,18 @@ import { TableData } from './seatingUtilities';
 
 export const calculateFitness = (tables: TableData[], guests: any[]): number => {
     let fitnessScore = 0;
+    const maxTableLength = 10;  // Set this to the maximum number of guests a table can hold
+    const emptySeatPenalty = 2;  // Set the penalty for each empty seat
 
     for (const table of tables) {
-        const tableGuests = table.names.map(name => guests.find(guest => guest.attendee_name === name));
-        
+        const tableGuests = table.names.map(name => guests.find(guest => guest.attendee_name === name))
+                            .filter(guest => guest !== undefined); // Add this line to filter out undefined guests
+
         const totalGuests = tableGuests.length;
+
+        // Apply downweight for empty seats
+        const emptySeats = maxTableLength - totalGuests;
+        fitnessScore -= (emptySeats * emptySeatPenalty);
 
         const andrewFamilyCount = tableGuests.filter(guest => guest.relationship === "Family of Andrew Maddox").length;
         const andrewFriendCount = tableGuests.filter(guest => guest.relationship === "Friend of Andrew Maddox").length;
@@ -33,5 +40,5 @@ export const calculateFitness = (tables: TableData[], guests: any[]): number => 
         }
     }
 
-    return fitnessScore;
+    return Number(fitnessScore.toFixed(1));
 };

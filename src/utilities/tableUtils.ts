@@ -2,6 +2,7 @@
 
 import { generateRandomTable, TableData } from "./seatingUtilities";
 import { calculateFitness } from './fitnessFunction';  // Importing the calculateFitness function
+import { runGeneticAlgorithm } from './geneticAlgorithm';  // Import the main Genetic Algorithm function
 
 export const createTableData = (
   guests: any[],
@@ -48,21 +49,16 @@ export const createTableData = (
     // When no top table is specified, include topTableGuests in the normal table arrangement
     remainingGuests = guests;
   }
-  console.log("Tables after adding top table if applicable:", tables);
 
-  console.log("Remaining guests:", remainingGuests);
-
-  // Generate random tables for remaining guests
-  const randomTables = generateRandomTable(remainingGuests, sizeNormalTablesNumber);
-  console.log("Randomly generated tables:", randomTables);
+  // Generate the remaining tables using the Genetic Algorithm
+  const optimizedRemainingGuestTables = runGeneticAlgorithm(
+    remainingGuests,
+    sizeNormalTablesNumber,
+    numNormalTableNumber
+  );
 
   // Combine the top table(s) with the randomly generated tables
-  tables = [...tables, ...randomTables];
-  console.log("Final tables:", tables);
+  const finaltables = [...tables, ...optimizedRemainingGuestTables];
 
-  // Calculate the fitness score of the table arrangement
-  const fitnessScore = calculateFitness(tables, guests);
-  console.log("Fitness Score:", fitnessScore);  // Writing the fitness score to the console
-
-  return tables;
+  return finaltables;
 };
