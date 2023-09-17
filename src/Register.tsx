@@ -108,8 +108,8 @@ export const Register = () => {
   
 
   return (
-    <Box p={8}>
-    <VStack spacing={4}>  {/* <-- Added VStack here with a spacing of 4 */}
+    <Box p={6}>
+    <VStack spacing={2} mx="auto">
       <CreateNewEventButton
         handleNewEventSubmit={handleNewEventSubmit}
         eventOptions={eventOptions}
@@ -122,11 +122,11 @@ export const Register = () => {
         eventOptions={eventOptions}
         setShouldRefetch={setShouldRefetch}
       />
-    </VStack>  {/* <-- Close VStack here */}
+    </VStack> 
 
       {shouldWriteData && (
         <WriteData
-          endpoint="/api/addEvent" // Your API endpoint for adding a new event
+          endpoint="/api/addEvent"
           payload={{
             event_name: eventName,
             event_date: eventDate,
@@ -151,7 +151,7 @@ console.log("Event ID:", eventData.event_id);
           
           onFailure={(error) => {
             console.error("There was an error adding the event", error);
-            setShouldWriteData(false); // Reset the trigger
+            setShouldWriteData(false); 
           }}
         />
       )}

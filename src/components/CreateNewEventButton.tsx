@@ -215,7 +215,7 @@ export const CreateNewEventButton: React.FC<CreateNewEventButtonProps> = ({
 
   return (
     <>
-      <Button mt={4} onClick={() => setIsOpenNew(true)}>
+      <Button mt={2} ml={4}  onClick={() => setIsOpenNew(true)}>
         Create New Event
       </Button>
       <ReusableModal
