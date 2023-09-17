@@ -1,7 +1,7 @@
 // src/components/PlanBuilderNavBar/PlanBuilderNavBar.tsx
 
 import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
-import { HStack, Button, Text } from "@chakra-ui/react";
+import { HStack, Button, Text, Show } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useEvent } from "./EventContext";
 import { EditExistingEventButton } from "./EditExistingEventButton";
@@ -63,9 +63,11 @@ const MainPageNavBar: React.FC<MainPageNavBarProps> = ({
         <Button onClick={() => navigate("/home")}>
           <i className="fa fa-home" style={{ fontSize: "30px" }}></i>
         </Button>
-        <Text fontSize="2xl" fontWeight="bold" color="black">
-          Welcome to {eventData.event_name}
-        </Text>
+        <Show above="lg">
+          <Text fontSize="2xl" fontWeight="bold" color="black">
+            Welcome to {eventData.event_name}
+          </Text>
+        </Show>
       </HStack>
       <HStack spacing={3} mr={6}>
         <Button

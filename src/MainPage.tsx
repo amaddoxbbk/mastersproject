@@ -10,6 +10,7 @@ import {
   Grid,
   GridItem,
   VStack,
+  useBreakpointValue
 } from "@chakra-ui/react";
 import { AddGuestButton } from "./components/AddGuestButton";
 import { AddCoupleButton } from "./components/AddCoupleButton";
@@ -73,36 +74,36 @@ export const MainPage = () => {
       }}
     >
       <GridItem area="nav">
-        <Box>
+        <Box ml={4}>
           <MainPageNavBar setShouldRefetch={setShouldRefetch} />
         </Box>
       </GridItem>
 
       <GridItem area="aside" mt={2}>
-        <Box>
-          <VStack spacing={4} mt={4}>
-            {brideCount + groomCount !== 2 && (
-              <AddCoupleButton setShouldRefetch={setShouldRefetch} />
-            )}
-            {brideCount + groomCount === 2 && guestCount === 0 && (
-              <RemoveCoupleButton setShouldRefetch={setShouldRefetch} />
-            )}
-            {brideCount + groomCount === 2 && (
-              <AddGuestButton
-                guests={guests}
-                setShouldRefetch={setShouldRefetch}
-              />
-            )}
-            {brideCount + groomCount === 2 && guestCount > 0 && (
-              <RemoveGuestButton
-                guests={guests}
-                setShouldRefetch={setShouldRefetch}
-              />
-            )}
-            <EditExistingEventButton setShouldRefetch={setShouldRefetch} />
-          </VStack>
-        </Box>
-      </GridItem>
+      <Box>
+        <VStack spacing={4} mt={4}>
+          {brideCount + groomCount !== 2 && (
+            <AddCoupleButton setShouldRefetch={setShouldRefetch} />
+          )}
+          {brideCount + groomCount === 2 && guestCount === 0 && (
+            <RemoveCoupleButton setShouldRefetch={setShouldRefetch} />
+          )}
+          {brideCount + groomCount === 2 && (
+            <AddGuestButton
+              guests={guests}
+              setShouldRefetch={setShouldRefetch}
+            />
+          )}
+          {brideCount + groomCount === 2 && guestCount > 0 && (
+            <RemoveGuestButton
+              guests={guests}
+              setShouldRefetch={setShouldRefetch}
+            />
+          )}
+          <EditExistingEventButton setShouldRefetch={setShouldRefetch} />
+        </VStack>
+      </Box>
+    </GridItem>
       <GridItem area="main">
         <Box>
           <Table mt={4} variant="simple">
