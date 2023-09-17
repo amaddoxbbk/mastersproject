@@ -31,7 +31,6 @@ function nextGenerationWithMutation(
 }
 
 
-
 // Main Genetic Algorithm function
 export function runGeneticAlgorithm(
   remainingGuests: any[],
@@ -41,11 +40,11 @@ export function runGeneticAlgorithm(
 
   // Initialize population
 
-  const numGenerations: number = 20
-  const populationSize: number = 50
+  const numGenerations: number = 50
+  const populationSize: number = 2000
 
   let population: TableData[][] = [];
-  for (let i = 0; i < populationSize; i++) {
+  for (let i = 0; i < populationSize * 50; i++) {
     const newTableData = createRemainingGuestsTableData(
       remainingGuests,
       sizeNormalTablesNumber
@@ -53,11 +52,9 @@ export function runGeneticAlgorithm(
     population.push(newTableData);
   }
 
-  console.log("numGenerations:", numGenerations);
-  console.log("populationSize:", populationSize);
   // Main GA loop
   for (let generation = 0; generation < numGenerations; generation++) {
-    const fitnessScores = population.map(member => calculateFitness(member, remainingGuests));
+    const fitnessScores = population.map(member => calculateFitness(member, remainingGuests, sizeNormalTablesNumber)); // <-- Added sizeNormalTablesNumber here
     console.log(`Generation ${generation} Fitness scores: `, [...fitnessScores].sort((a, b) => b - a));
 
     const bestParent = selectBestParent(population, fitnessScores);
@@ -72,7 +69,7 @@ export function runGeneticAlgorithm(
   }
 
   // Sort the final population based on fitness and return the best solution
-  const finalFitnessScores = population.map(member => calculateFitness(member, remainingGuests));
+  const finalFitnessScores = population.map(member => calculateFitness(member, remainingGuests, sizeNormalTablesNumber));
   const bestSolutionIndex = finalFitnessScores.indexOf(Math.max(...finalFitnessScores));
   return population[bestSolutionIndex];
 }

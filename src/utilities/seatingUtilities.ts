@@ -9,7 +9,6 @@ export interface TableData {
     guests: any[],
     sizeNormalTablesNumber: number
   ): TableData[] => {
-    console.log("Original guest list:", guests);
   
     let tables: TableData[] = [];
     let currentTable: string[] = [];
@@ -30,14 +29,9 @@ export interface TableData {
       }
     }
   
-    console.log("Grouped guests:", groupedGuests);
-    console.log("Single guests:", singleGuests);
-  
     // Shuffle the guests to randomize the seating
     const shuffledGuests = [...groupedGuests, ...singleGuests].sort(() => Math.random() - 0.5);
-  
-    console.log("Shuffled guests:", shuffledGuests);
-  
+    
     for (const guestOrGroup of shuffledGuests) {
       if (Array.isArray(guestOrGroup)) {
         // It's a group

@@ -1,44 +1,74 @@
 import { TableData } from './seatingUtilities';
 
-export const calculateFitness = (tables: TableData[], guests: any[]): number => {
-    let fitnessScore = 0;
-    const maxTableLength = 10;  // Set this to the maximum number of guests a table can hold
-    const emptySeatPenalty = 2;  // Set the penalty for each empty seat
+// Helper function to calculate escalating empty seat penalty
+const calculateEmptySeatPenalty = (emptySeats: number) => {
+  let escalatingPenalty = 500;
+  let emptySeatPenalty = 0;
 
-    for (const table of tables) {
-        const tableGuests = table.names.map(name => guests.find(guest => guest.attendee_name === name))
-                            .filter(guest => guest !== undefined); // Add this line to filter out undefined guests
+  for (let i = 1; i <= emptySeats; i++) {
+    emptySeatPenalty += i * i * escalatingPenalty;
+    escalatingPenalty++;
+  }
 
-        const totalGuests = tableGuests.length;
+  return emptySeatPenalty;
+};
 
-        // Apply downweight for empty seats
-        const emptySeats = maxTableLength - totalGuests;
-        fitnessScore -= (emptySeats * emptySeatPenalty);
+export const calculateFitness = (tables: TableData[], guests: any[], maxTableSize: number): number => {
+  let fitnessScore = 0;
+  const maxTableLength = maxTableSize;
 
-        const andrewFamilyCount = tableGuests.filter(guest => guest.relationship === "Family of Andrew Maddox").length;
-        const andrewFriendCount = tableGuests.filter(guest => guest.relationship === "Friend of Andrew Maddox").length;
-        const sophieFamilyCount = tableGuests.filter(guest => guest.relationship === "Family of Sophie Vellacott").length;
-        const sophieFriendCount = tableGuests.filter(guest => guest.relationship === "Friend of Sophie Vellacott").length;
-        
-        // Scoring for how close the table is to being only one family
-        if (andrewFamilyCount > 0 || sophieFamilyCount > 0) {
-            const andrewFamilyRatio = andrewFamilyCount / totalGuests;
-            const sophieFamilyRatio = sophieFamilyCount / totalGuests;
+  // Constants
+  const partialFamilyBonus = 10000;
+  const fullFamilyBonus = 30000;
+  const fullnessThreshold = 0.8;  // 80% full
 
-            fitnessScore += (andrewFamilyRatio * 20);
-            fitnessScore += (sophieFamilyRatio * 20);
-        }
+  for (const table of tables) {
+    const tableGuests = table.names.map(name => guests.find(guest => guest.attendee_name === name))
+                          .filter(guest => guest !== undefined);
 
-        // Both families mixed
-        if (andrewFamilyCount > 0 && sophieFamilyCount > 0) {
-            fitnessScore -= 10;
-        }
-        
-        // Only friends and they are mixed
-        if (andrewFriendCount > 0 && sophieFriendCount > 0 && andrewFamilyCount === 0 && sophieFamilyCount === 0) {
-            fitnessScore += 5;
-        }
+    const totalGuests = tableGuests.length;
+    const tableFullness = totalGuests / maxTableLength;  // Calculate the fullness of the table
+
+    // Apply downweight for empty seats with escalating penalty
+    const emptySeats = maxTableLength - totalGuests;
+    fitnessScore -= calculateEmptySeatPenalty(emptySeats);
+
+    // Family and Friend counts
+    const andrewFamilyCount = tableGuests.filter(guest => guest.relationship === "Family of Andrew Maddox").length;
+    const andrewFriendCount = tableGuests.filter(guest => guest.relationship === "Friend of Andrew Maddox").length;
+    const sophieFamilyCount = tableGuests.filter(guest => guest.relationship === "Family of Sophie Vellacott").length;
+    const sophieFriendCount = tableGuests.filter(guest => guest.relationship === "Friend of Sophie Vellacott").length;
+
+    // Full family table bonus, with the 80% fullness condition
+    if ((andrewFamilyCount === totalGuests && sophieFamilyCount === 0) || 
+        (sophieFamilyCount === totalGuests && andrewFamilyCount === 0)) {
+      if (tableFullness >= fullnessThreshold) {
+        fitnessScore += fullFamilyBonus;
+      }
     }
 
-    return Number(fitnessScore.toFixed(1));
+    // Partial family table bonus
+    if (andrewFamilyCount > 0 && andrewFamilyCount >= totalGuests / 2) {  
+      fitnessScore += partialFamilyBonus;
+    } else if (sophieFamilyCount > 0 && sophieFamilyCount >= totalGuests / 2) { 
+      fitnessScore += partialFamilyBonus;
+    }
+
+    // Mixed family penalty
+    if (andrewFamilyCount > 0 && sophieFamilyCount > 0) {
+      fitnessScore -= 5000;
+    }
+
+    // Reward for mixed friends
+    if (andrewFriendCount > 0 && sophieFriendCount > 0 && andrewFamilyCount === 0 && sophieFamilyCount === 0) {
+      const totalFriends = andrewFriendCount + sophieFriendCount;
+      const difference = Math.abs(andrewFriendCount - sophieFriendCount);
+
+      const mixingScore = (totalFriends - difference) * 50;
+
+      fitnessScore += mixingScore;
+    }
+  }
+
+  return Number(fitnessScore.toFixed(1));
 };
