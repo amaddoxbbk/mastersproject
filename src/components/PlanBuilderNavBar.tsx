@@ -19,7 +19,7 @@ const PlanBuilderNavBar: React.FC<PlanBuilderNavBarProps> = ({ setShouldRefetch 
     <HStack
       mt={6}
       mb={2}
-      ml={2}
+      ml={4}
       width="100%"
       justifyContent="space-between"
     >
