@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box } from "@chakra-ui/react";
+import { Box, VStack } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import WriteData from "./components/WriteData";
 import { CreateNewEventButton } from "./components/CreateNewEventButton";
@@ -109,6 +109,7 @@ export const Register = () => {
 
   return (
     <Box p={8}>
+    <VStack spacing={4}>  {/* <-- Added VStack here with a spacing of 4 */}
       <CreateNewEventButton
         handleNewEventSubmit={handleNewEventSubmit}
         eventOptions={eventOptions}
@@ -117,11 +118,11 @@ export const Register = () => {
         handleFindEventSubmit={handleFindEventSubmit}
         eventOptions={eventOptions}
       />
-
       <RemoveExistingEventButton
-      eventOptions={eventOptions}
-      setShouldRefetch={setShouldRefetch}
-    />
+        eventOptions={eventOptions}
+        setShouldRefetch={setShouldRefetch}
+      />
+    </VStack>  {/* <-- Close VStack here */}
 
       {shouldWriteData && (
         <WriteData
