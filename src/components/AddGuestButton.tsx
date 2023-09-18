@@ -45,11 +45,13 @@ const newGuestSchema = z.object({
 interface AddGuestButtonProps {
   guests: any[];
   setShouldRefetch: React.Dispatch<React.SetStateAction<boolean>>;
+  style?: React.CSSProperties;
 }
 
 export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
   guests,
   setShouldRefetch,
+  style
 }) => {
   const { eventData } = useEvent();
   const eventId = eventData.event_id;
@@ -352,7 +354,7 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
 
   return (
     <>
-      <Button onClick={() => setIsOpen(true)}>Add Guest</Button>
+      <Button onClick={() => setIsOpen(true)} style={style}>Add Guest</Button>
       <ReusableModal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}

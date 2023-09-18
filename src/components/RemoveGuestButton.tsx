@@ -8,11 +8,13 @@ import GenericDropdown from "./GenericDropdown";
 interface RemoveGuestButtonProps {
   guests: any[];
   setShouldRefetch: React.Dispatch<React.SetStateAction<boolean>>;
+  style?: React.CSSProperties;
 }
 
 export const RemoveGuestButton: React.FC<RemoveGuestButtonProps> = ({
   guests,
   setShouldRefetch,
+  style
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedGuest, setSelectedGuest] = useState("");
@@ -72,7 +74,7 @@ export const RemoveGuestButton: React.FC<RemoveGuestButtonProps> = ({
 
   return (
     <>
-      <Button onClick={() => setIsOpen(true)}>Remove Guest</Button>
+      <Button onClick={() => setIsOpen(true)} style={style}>Remove Guest</Button>
       <ReusableModal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}

@@ -16,11 +16,13 @@ import { useEvent } from "./EventContext";
 import { set, z } from "zod";
 
 interface AddCoupleButtonProps {
-  setShouldRefetch: React.Dispatch<React.SetStateAction<boolean>>; // Add this line
+  setShouldRefetch: React.Dispatch<React.SetStateAction<boolean>>; 
+  style?: React.CSSProperties;
 }
 
 export const AddCoupleButton: React.FC<AddCoupleButtonProps> = ({
   setShouldRefetch,
+  style
 }) => {
   const { eventData } = useEvent();
   const eventId = eventData.event_id;
@@ -208,7 +210,7 @@ export const AddCoupleButton: React.FC<AddCoupleButtonProps> = ({
 
   return (
     <>
-      <Button onClick={() => setIsOpen(true)}>Add Couple</Button>
+      <Button onClick={() => setIsOpen(true)}  style={style}>Add Couple</Button>
       <ReusableModal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}

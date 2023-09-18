@@ -30,6 +30,10 @@ export const MainPage = () => {
   const [shouldRefetch, setShouldRefetch] = useState(false);
   const [eventInfo, setEventInfo] = useState<any>(null);
 
+  const buttonStyle: React.CSSProperties = {
+    width: '150px',
+  };
+
   const fetchAllData = async () => {
     setIsLoading(true);
     try {
@@ -85,48 +89,52 @@ export const MainPage = () => {
       <Box>
       <VStack spacing={4} mt={4} display={{ base: "none", lg: "flex" }}>
         {brideCount + groomCount !== 2 && (
-          <AddCoupleButton setShouldRefetch={setShouldRefetch} />
+          <AddCoupleButton setShouldRefetch={setShouldRefetch} style={buttonStyle}/>
         )}
         {brideCount + groomCount === 2 && guestCount === 0 && (
-          <RemoveCoupleButton setShouldRefetch={setShouldRefetch} />
+          <RemoveCoupleButton setShouldRefetch={setShouldRefetch} style={buttonStyle}/>
         )}
         {brideCount + groomCount === 2 && (
           <AddGuestButton
             guests={guests}
             setShouldRefetch={setShouldRefetch}
+            style={buttonStyle}
           />
         )}
         {brideCount + groomCount === 2 && guestCount > 0 && (
           <RemoveGuestButton
             guests={guests}
             setShouldRefetch={setShouldRefetch}
+            style={buttonStyle}
           />
         )}
-        <EditExistingEventButton setShouldRefetch={setShouldRefetch} />
+        <EditExistingEventButton setShouldRefetch={setShouldRefetch} style={buttonStyle}/>
     </VStack>
       </Box>
 
       <Box display="flex" justifyContent="center" alignItems="center">
       <HStack spacing={4} mt={4} display={{ base: "flex", lg: "none" }}>
         {brideCount + groomCount !== 2 && (
-          <AddCoupleButton setShouldRefetch={setShouldRefetch} />
+          <AddCoupleButton setShouldRefetch={setShouldRefetch} style={buttonStyle}/>
         )}
         {brideCount + groomCount === 2 && guestCount === 0 && (
-          <RemoveCoupleButton setShouldRefetch={setShouldRefetch} />
+          <RemoveCoupleButton setShouldRefetch={setShouldRefetch} style={buttonStyle}/>
         )}
         {brideCount + groomCount === 2 && (
           <AddGuestButton
             guests={guests}
             setShouldRefetch={setShouldRefetch}
+            style={buttonStyle}
           />
         )}
         {brideCount + groomCount === 2 && guestCount > 0 && (
           <RemoveGuestButton
             guests={guests}
             setShouldRefetch={setShouldRefetch}
+            style={buttonStyle}
           />
         )}
-        <EditExistingEventButton setShouldRefetch={setShouldRefetch} />
+        <EditExistingEventButton setShouldRefetch={setShouldRefetch} style={buttonStyle}/>
     </HStack>
       </Box>
 

@@ -6,10 +6,12 @@ import { useEvent } from "./EventContext";
 
 interface RemoveCoupleButtonProps {
   setShouldRefetch: React.Dispatch<React.SetStateAction<boolean>>;
+  style?: React.CSSProperties;
 }
 
 export const RemoveCoupleButton: React.FC<RemoveCoupleButtonProps> = ({
   setShouldRefetch,
+  style
 }) => {
   const { eventData } = useEvent();
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +39,7 @@ export const RemoveCoupleButton: React.FC<RemoveCoupleButtonProps> = ({
 
   return (
     <>
-      <Button onClick={() => setIsOpen(true)}>Remove Couple</Button>
+      <Button onClick={() => setIsOpen(true)} style={style}>Remove Couple</Button>
       <ReusableModal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}

@@ -15,9 +15,10 @@ const tableSchema = z.object({
 
 interface EditExistingEventButtonProps {
   setShouldRefetch: React.Dispatch<React.SetStateAction<boolean>>;
+  style?: React.CSSProperties;
 }
 
-export const EditExistingEventButton: React.FC<EditExistingEventButtonProps> = ({ setShouldRefetch }) => {
+export const EditExistingEventButton: React.FC<EditExistingEventButtonProps> = ({ setShouldRefetch, style}) => {
   const { eventData } = useEvent(); // Use the context
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [numTopTables, setNumTopTables] = useState(0);
@@ -135,7 +136,7 @@ export const EditExistingEventButton: React.FC<EditExistingEventButtonProps> = (
 
   return (
     <>
-      <Button onClick={() => setIsOpenEdit(true)}>
+      <Button onClick={() => setIsOpenEdit(true)} style={style}>
         Edit Event
       </Button>
       <ReusableModal
