@@ -113,14 +113,17 @@ export const Register = () => {
       <CreateNewEventButton
         handleNewEventSubmit={handleNewEventSubmit}
         eventOptions={eventOptions}
+        style={{ width: '20%' }}
       />
       <FindExistingEventButton
         handleFindEventSubmit={handleFindEventSubmit}
         eventOptions={eventOptions}
+        style={{ width: '20%' }}
       />
       <RemoveExistingEventButton
         eventOptions={eventOptions}
         setShouldRefetch={setShouldRefetch}
+        style={{ width: '20%' }}
       />
     </VStack> 
 

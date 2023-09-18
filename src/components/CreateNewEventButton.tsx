@@ -70,11 +70,13 @@ interface CreateNewEventButtonProps {
     maxSizeNormalTable: number
   ) => void;
   eventOptions: { value: string; label: string }[];
+  style?: React.CSSProperties;  // <-- Add this line to include the style prop
 }
 
 export const CreateNewEventButton: React.FC<CreateNewEventButtonProps> = ({
   handleNewEventSubmit,
   eventOptions,
+  style,
 }) => {
   const [isOpenNew, setIsOpenNew] = useState(false);
   const [eventName, setEventName] = useState("");
@@ -215,7 +217,7 @@ export const CreateNewEventButton: React.FC<CreateNewEventButtonProps> = ({
 
   return (
     <>
-      <Button mt={2} ml={4}  onClick={() => setIsOpenNew(true)}>
+      <Button mt={2} ml={4}  onClick={() => setIsOpenNew(true)} style={style}>
         Create New Event
       </Button>
       <ReusableModal

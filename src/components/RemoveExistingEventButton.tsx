@@ -7,11 +7,12 @@ import GenericDropdown from "./GenericDropdown";
 interface RemoveExistingEventButtonProps {
   eventOptions: { value: string; label: string }[];
   setShouldRefetch: React.Dispatch<React.SetStateAction<boolean>>;
+  style?: React.CSSProperties;
 }
 
 export const RemoveExistingEventButton: React.FC<
   RemoveExistingEventButtonProps
-> = ({ eventOptions, setShouldRefetch }) => {
+> = ({ eventOptions, setShouldRefetch, style }) => {
   const [isOpenRemove, setIsOpenRemove] = useState(false);
   const [confirmRemove, setConfirmRemove] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState("");
@@ -80,7 +81,7 @@ export const RemoveExistingEventButton: React.FC<
 
   return (
     <>
-      <Button mt={4} ml={4} onClick={() => setIsOpenRemove(true)}>
+      <Button mt={4} ml={4} onClick={() => setIsOpenRemove(true)} style={style}>
         Remove Existing Event
       </Button>
       <ReusableModal

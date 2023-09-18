@@ -6,9 +6,10 @@ import GenericDropdown from './GenericDropdown';
 interface FindExistingEventButtonProps {
   handleFindEventSubmit: (searchQuery: string) => void;
   eventOptions: { value: string; label: string }[];
+  style?: React.CSSProperties; // <-- Add this line to include the style prop
 }
 
-export const FindExistingEventButton: React.FC<FindExistingEventButtonProps> = ({ handleFindEventSubmit, eventOptions }) => {
+export const FindExistingEventButton: React.FC<FindExistingEventButtonProps> = ({ handleFindEventSubmit, eventOptions, style }) => {
   const [isOpenFind, setIsOpenFind] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -36,7 +37,7 @@ export const FindExistingEventButton: React.FC<FindExistingEventButtonProps> = (
 
   return (
     <>
-      <Button mt={4} ml={4} onClick={() => setIsOpenFind(true)}>
+      <Button mt={4} ml={4} onClick={() => setIsOpenFind(true)} style={style}>
         Find Existing Event
       </Button>
       <ReusableModal
