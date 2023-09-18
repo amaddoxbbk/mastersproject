@@ -18,10 +18,11 @@ export const calculateFitness = (tables: TableData[], guests: any[], maxTableSiz
   const maxTableLength = maxTableSize;
 
   // Constants
-  const partialFamilyBonus = 15000;
+  const partialFamilyBonus = 10000;
   const fullFamilyBonus = 30000;
   const fullnessThreshold = 0.8;  // 80% full
   const mixedFamilyPenalty = 5000;
+  const blacklistPenalty = -100000; // Massive penalty for blacklisted attendees
 
   for (const table of tables) {
     const tableGuests = table.names.map(name => guests.find(guest => guest.attendee_name === name))
@@ -42,6 +43,17 @@ export const calculateFitness = (tables: TableData[], guests: any[], maxTableSiz
 
     for (const relation of filteredUniqueRelationships) {
         relationshipCounts[relation] = tableGuests.filter(guest => guest.relationship === relation).length;
+    }
+
+    // Checking the blacklist condition
+    for (const guest of tableGuests) {
+      if (Array.isArray(guest.blacklist_attendee_ids)) {
+        for (const blacklistedId of guest.blacklist_attendee_ids) {
+          if (tableGuests.some(otherGuest => otherGuest.attendee_id === blacklistedId)) {
+            fitnessScore += blacklistPenalty;
+          }
+        }
+      }
     }
 
     // Loop over each unique relationship to apply bonus or penalty
