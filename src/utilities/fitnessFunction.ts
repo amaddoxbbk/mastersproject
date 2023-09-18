@@ -18,7 +18,7 @@ export const calculateFitness = (tables: TableData[], guests: any[], maxTableSiz
   const maxTableLength = maxTableSize;
 
   // Constants
-  const partialFamilyBonus = 10000;
+  const partialFamilyBonus = 15000;
   const fullFamilyBonus = 30000;
   const fullnessThreshold = 0.8;  // 80% full
   const mixedFamilyPenalty = 5000;
