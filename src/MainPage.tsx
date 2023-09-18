@@ -12,7 +12,7 @@ import {
   VStack,
   useBreakpointValue,
   HStack,
-  Center
+  Center,
 } from "@chakra-ui/react";
 import { AddGuestButton } from "./components/AddGuestButton";
 import { AddCoupleButton } from "./components/AddCoupleButton";
@@ -31,7 +31,7 @@ export const MainPage = () => {
   const [eventInfo, setEventInfo] = useState<any>(null);
 
   const buttonStyle: React.CSSProperties = {
-    width: '150px',
+    width: "150px",
   };
 
   const fetchAllData = async () => {
@@ -76,108 +76,131 @@ export const MainPage = () => {
       }}
       templateColumns={{
         base: "1fr",
-        lg: "225px 1fr",
+        lg: "200px 1fr",
       }}
     >
       <GridItem area="nav">
-        <Box ml={4}>
+        <Box ml={4} mr={2}>
           <MainPageNavBar setShouldRefetch={setShouldRefetch} />
         </Box>
       </GridItem>
 
       <GridItem area="aside" mt={2}>
-      <Box>
-      <VStack spacing={4} mt={4} display={{ base: "none", lg: "flex" }}>
-        {brideCount + groomCount !== 2 && (
-          <AddCoupleButton setShouldRefetch={setShouldRefetch} style={buttonStyle}/>
-        )}
-        {brideCount + groomCount === 2 && guestCount === 0 && (
-          <RemoveCoupleButton setShouldRefetch={setShouldRefetch} style={buttonStyle}/>
-        )}
-        {brideCount + groomCount === 2 && (
-          <AddGuestButton
-            guests={guests}
-            setShouldRefetch={setShouldRefetch}
-            style={buttonStyle}
-          />
-        )}
-        {brideCount + groomCount === 2 && guestCount > 0 && (
-          <RemoveGuestButton
-            guests={guests}
-            setShouldRefetch={setShouldRefetch}
-            style={buttonStyle}
-          />
-        )}
-        <EditExistingEventButton setShouldRefetch={setShouldRefetch} style={buttonStyle}/>
-    </VStack>
-      </Box>
+        <Box>
+          <VStack spacing={4} mt={4} display={{ base: "none", lg: "flex" }}>
+            {brideCount + groomCount !== 2 && (
+              <AddCoupleButton
+                setShouldRefetch={setShouldRefetch}
+                style={buttonStyle}
+              />
+            )}
+            {brideCount + groomCount === 2 && guestCount === 0 && (
+              <RemoveCoupleButton
+                setShouldRefetch={setShouldRefetch}
+                style={buttonStyle}
+              />
+            )}
+            {brideCount + groomCount === 2 && (
+              <AddGuestButton
+                guests={guests}
+                setShouldRefetch={setShouldRefetch}
+                style={buttonStyle}
+              />
+            )}
+            {brideCount + groomCount === 2 && guestCount > 0 && (
+              <RemoveGuestButton
+                guests={guests}
+                setShouldRefetch={setShouldRefetch}
+                style={buttonStyle}
+              />
+            )}
+            <EditExistingEventButton
+              setShouldRefetch={setShouldRefetch}
+              style={buttonStyle}
+            />
+          </VStack>
+        </Box>
 
-      <Box display="flex" justifyContent="center" alignItems="center">
-      <HStack spacing={4} mt={4} display={{ base: "flex", lg: "none" }}>
-        {brideCount + groomCount !== 2 && (
-          <AddCoupleButton setShouldRefetch={setShouldRefetch} style={buttonStyle}/>
-        )}
-        {brideCount + groomCount === 2 && guestCount === 0 && (
-          <RemoveCoupleButton setShouldRefetch={setShouldRefetch} style={buttonStyle}/>
-        )}
-        {brideCount + groomCount === 2 && (
-          <AddGuestButton
-            guests={guests}
-            setShouldRefetch={setShouldRefetch}
-            style={buttonStyle}
-          />
-        )}
-        {brideCount + groomCount === 2 && guestCount > 0 && (
-          <RemoveGuestButton
-            guests={guests}
-            setShouldRefetch={setShouldRefetch}
-            style={buttonStyle}
-          />
-        )}
-        <EditExistingEventButton setShouldRefetch={setShouldRefetch} style={buttonStyle}/>
-    </HStack>
-      </Box>
-
-    </GridItem>
-    <GridItem area="main">
-  <Box>
-    <Table mt={4} variant="simple">
-      <Thead>
-        <Tr>
-          <Th>Guest Name</Th>
-          <Th>Relationship</Th>
-          <Th>Plus One</Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {isLoading ? (
-          <Tr>
-            <Td>Loading...</Td>
-          </Tr>
-        ) : guests.length > 0 ? (
-          guests
-            .filter((guest) => !guest.is_groom && !guest.is_bride)
-            .filter((guest) => !guest.partner_to)
-            .map((guest, index) => (
-              <Tr key={index}>
-                <Td>{guest.attendee_name}</Td>
-                <Td>{guest.relationship || "-"}</Td>
-                <Td>
-                  {guests.find(
-                    (plusOne) => plusOne.partner_to === guest.attendee_id
-                  )?.attendee_name || "-"}
-                </Td>
+        <Box display="flex" justifyContent="center" alignItems="center">
+          <HStack spacing={4} mt={4} display={{ base: "flex", lg: "none" }}>
+            {brideCount + groomCount !== 2 && (
+              <AddCoupleButton
+                setShouldRefetch={setShouldRefetch}
+                style={buttonStyle}
+              />
+            )}
+            {brideCount + groomCount === 2 && guestCount === 0 && (
+              <RemoveCoupleButton
+                setShouldRefetch={setShouldRefetch}
+                style={buttonStyle}
+              />
+            )}
+            {brideCount + groomCount === 2 && (
+              <AddGuestButton
+                guests={guests}
+                setShouldRefetch={setShouldRefetch}
+                style={buttonStyle}
+              />
+            )}
+            {brideCount + groomCount === 2 && guestCount > 0 && (
+              <RemoveGuestButton
+                guests={guests}
+                setShouldRefetch={setShouldRefetch}
+                style={buttonStyle}
+              />
+            )}
+            <EditExistingEventButton
+              setShouldRefetch={setShouldRefetch}
+              style={buttonStyle}
+            />
+          </HStack>
+        </Box>
+      </GridItem>
+      <GridItem area="main">
+        <Box m={6}>
+          <Table mt={4} variant="simple">
+            <Thead bg="rgb(74, 110, 241)" >
+              <Tr>
+                <Th textAlign="center" color="white">
+                  Guest Name
+                </Th>
+                <Th textAlign="center" color="white">
+                  Relationship
+                </Th>
+                <Th textAlign="center" color="white">
+                  Plus One
+                </Th>
               </Tr>
-            ))
-        ) : (
-          <Tr>
-            <Td>No guests added yet</Td>
-          </Tr>
-        )}
-      </Tbody>
-    </Table>
-  </Box>
-</GridItem>
+            </Thead>
+            <Tbody>
+              {isLoading ? (
+                <Tr>
+                  <Td textAlign="center">Loading...</Td>
+                </Tr>
+              ) : guests.length > 0 ? (
+                guests
+                  .filter((guest) => !guest.is_groom && !guest.is_bride)
+                  .filter((guest) => !guest.partner_to)
+                  .map((guest, index) => (
+                    <Tr key={index}>
+                      <Td textAlign="center">{guest.attendee_name}</Td>
+                      <Td textAlign="center">{guest.relationship || "-"}</Td>
+                      <Td textAlign="center">
+                        {guests.find(
+                          (plusOne) => plusOne.partner_to === guest.attendee_id
+                        )?.attendee_name || "-"}
+                      </Td>
+                    </Tr>
+                  ))
+              ) : (
+                <Tr>
+                  <Td>No guests added yet</Td>
+                </Tr>
+              )}
+            </Tbody>
+          </Table>
+        </Box>
+      </GridItem>
     </Grid>
   );
 };
