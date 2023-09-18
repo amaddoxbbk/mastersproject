@@ -12,7 +12,7 @@ export function mutate(population: TableData[][], initialGuests: any[], maxTable
       continue;
     }
 
-    for (let j = 0; j < 100; j++) {
+    for (let j = 0; j < 50; j++) {
       let randomTableIndex1 = Math.floor(Math.random() * individual.length);
       let randomTableIndex2 = Math.floor(Math.random() * individual.length);
 

@@ -87,10 +87,10 @@ const PlanBuilder = () => {
         }}
         templateColumns={{
           base: "1fr",
-          lg: "225px 1fr",
+          lg: "200px 1fr",
         }}
       >
-        <GridItem area="nav">
+        <GridItem area="nav" ml={1} mr={2}>
           <PlanBuilderNavBar setShouldRefetch={setShouldRefetch} />
         </GridItem>
         <GridItem area="aside" mt={4}>
