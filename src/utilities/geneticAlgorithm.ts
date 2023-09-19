@@ -41,11 +41,11 @@ export function runGeneticAlgorithm(
 
   // Initialize population
 
-  const numGenerations: number = 50
-  const populationSize: number = 2000
+  const numGenerations: number = 25
+  const populationSize: number = 1000
 
   let population: TableData[][] = [];
-  for (let i = 0; i < populationSize * 50; i++) {
+  for (let i = 0; i < populationSize * 25; i++) {
     const newTableData = createRemainingGuestsTableData(
       remainingGuests,
       sizeNormalTablesNumber
