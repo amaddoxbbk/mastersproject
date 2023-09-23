@@ -99,8 +99,9 @@ const TopTableManager: React.FC<TopTableManagerProps> = ({
     // Find the partner of the guest to be removed
     const partnerName = partnerMapping[name] || reversePartnerMapping[name] || null;
   
+    // Remove both the guest and their partner
     let updatedTopTableGuests = [...selectedTopTableGuests].filter(
-      (guestName) => guestName !== name && guestName !== partnerName // Remove both the guest and their partner
+      (guestName) => guestName !== name && guestName !== partnerName 
     );
   
     setSelectedTopTableGuests(updatedTopTableGuests);

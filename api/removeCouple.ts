@@ -13,7 +13,6 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   const { event_id } = req.body;
 
   try {
-    // Delete rows where either is_bride or is_groom is true and event_id matches
     await pool.query(
       'DELETE FROM attendees WHERE event_id = $1 AND (is_bride = true OR is_groom = true)',
       [event_id]

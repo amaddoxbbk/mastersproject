@@ -60,7 +60,7 @@ export const MainPage = () => {
 
   useEffect(() => {
     if (shouldRefetch || eventData.event_id) {
-      fetchAllData(); // This will now fetch both guests and event information
+      fetchAllData();
       setShouldRefetch(false);
     }
   }, [shouldRefetch, eventData.event_id]);

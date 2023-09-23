@@ -28,7 +28,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     );
     console.log(`Found ${plusOneResult.rowCount} plus one(s)`);
 
-    // Delete the plus one first, if any
+    // Delete the plus one first, if any, otherwise Foreign Key restriction violated and database rejects request
     if (plusOneResult.rowCount > 0) {
       console.log("Attempting to delete plus one...");
       const plusOneId = plusOneResult.rows[0].attendee_id;

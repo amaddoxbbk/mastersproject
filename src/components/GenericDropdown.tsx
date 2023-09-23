@@ -25,7 +25,7 @@ const GenericDropdown = ({ onSelect, selectedValue, options, title }: DropdownPr
       <MenuList maxHeight="200px" overflowY="auto">
         {options.map((option, index) => (
           <MenuItem 
-            key={option.value || index} // Use index as a fallback
+            key={option.value || index}
             onClick={(event) => {
               console.log("Event object: ", event);
               console.log("Clicked index: ", index);

@@ -1,5 +1,3 @@
-// SeatingUtilities.ts
-
 export interface TableData {
     title: string;
     names: string[];
@@ -34,7 +32,6 @@ export interface TableData {
     
     for (const guestOrGroup of shuffledGuests) {
       if (Array.isArray(guestOrGroup)) {
-        // It's a group
         if (currentTable.length <= sizeNormalTablesNumber - 2) {
           currentTable.push(guestOrGroup[0].attendee_name, guestOrGroup[1].attendee_name);
         } else {
@@ -46,7 +43,6 @@ export interface TableData {
           currentTableIndex++;
         }
       } else {
-        // It's a single
         currentTable.push(guestOrGroup.attendee_name);
       }
   

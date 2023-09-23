@@ -1,14 +1,11 @@
-// src/components/PlanBuilderNavBar/PlanBuilderNavBar.tsx
-
 import React, { Dispatch, SetStateAction } from 'react';
 import { HStack, Button, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { useEvent } from './EventContext'; // Adjust the import based on your folder structure
-import { EditExistingEventButton } from './EditExistingEventButton'; // Adjust the import based on your folder structure
+import { useEvent } from './EventContext';
 import { Show } from '@chakra-ui/react';
 
 interface PlanBuilderNavBarProps {
-  setShouldRefetch: Dispatch<SetStateAction<boolean>>; // Correctly typed now
+  setShouldRefetch: Dispatch<SetStateAction<boolean>>;
 }
 
 const PlanBuilderNavBar: React.FC<PlanBuilderNavBarProps> = ({ setShouldRefetch }) => {

@@ -4,7 +4,7 @@ import { createBiDirectionalPartnerMapping } from './partnerMappingUtility';
 export function mutate(population: TableData[][], initialGuests: any[], maxTableSize: number): TableData[][] {
   const copiedPopulation = JSON.parse(JSON.stringify(population));
   const partnerMapping = createBiDirectionalPartnerMapping(initialGuests);
-  const minTableSize = Math.ceil(0.75 * maxTableSize);  // 75% of the full table size
+  const minTableSize = Math.ceil(0.75 * maxTableSize);
 
   for (let i = 0; i < copiedPopulation.length; i++) {
     const individual = copiedPopulation[i];

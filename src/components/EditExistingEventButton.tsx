@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Button, FormControl, FormErrorMessage, FormLabel, Input, Stack } from "@chakra-ui/react";
 import { ReusableModal } from "./ReusableModal";
 import { z } from "zod";
-import WriteData from "./WriteData"; // Import WriteData
-import { useEvent } from "./EventContext"; // Import the context
+import WriteData from "./WriteData";
+import { useEvent } from "./EventContext";
 import axios from "axios";
 
 const tableSchema = z.object({
@@ -19,7 +19,7 @@ interface EditExistingEventButtonProps {
 }
 
 export const EditExistingEventButton: React.FC<EditExistingEventButtonProps> = ({ setShouldRefetch, style}) => {
-  const { eventData } = useEvent(); // Use the context
+  const { eventData } = useEvent();
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [numTopTables, setNumTopTables] = useState(0);
   const [maxSizeTopTable, setMaxSizeTopTable] = useState(0);
@@ -27,7 +27,7 @@ export const EditExistingEventButton: React.FC<EditExistingEventButtonProps> = (
   const [maxSizeNormalTable, setMaxSizeNormalTable] = useState(0);
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
   const [shouldWriteData, setShouldWriteData] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // New state variable for loading status
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = () => {
     console.log("Submitting edit event form");
@@ -68,7 +68,7 @@ export const EditExistingEventButton: React.FC<EditExistingEventButtonProps> = (
 
   useEffect(() => {
     if (isOpenEdit) {
-        setIsLoading(true); // Set loading to true when starting to fetch
+        setIsLoading(true);
         const fetchEventData = async () => {
             try {
               const response = await axios.post('/api/getOneEvent', { event_id: eventData.event_id });
@@ -85,7 +85,7 @@ export const EditExistingEventButton: React.FC<EditExistingEventButtonProps> = (
             } catch (error) {
               console.error("Error fetching existing event data:", error);
             }
-            setIsLoading(false); // Set loading to false when done fetching
+            setIsLoading(false);
           };
 
       fetchEventData();

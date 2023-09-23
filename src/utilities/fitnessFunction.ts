@@ -20,9 +20,9 @@ export const calculateFitness = (tables: TableData[], guests: any[], maxTableSiz
   // Constants
   const partialFamilyBonus = 15000;
   const fullFamilyBonus = 30000;
-  const fullnessThreshold = 0.8;  // 80% full
+  const fullnessThreshold = 0.8;  // 80% full - this is the threshold for a full family table bonus
   const mixedFamilyPenalty = 5000;
-  const blacklistPenalty = -100000; // Massive penalty for blacklisted attendees
+  const blacklistPenalty = -100000; // To prevent blacklisted guests from being seated together
 
   for (const table of tables) {
     const tableGuests = table.names.map(name => guests.find(guest => guest.attendee_name === name))
@@ -35,7 +35,6 @@ export const calculateFitness = (tables: TableData[], guests: any[], maxTableSiz
     const emptySeats = maxTableLength - totalGuests;
     fitnessScore -= calculateEmptySeatPenalty(emptySeats);
 
-    // Initialize a map to store counts for each relationship type at the table
     const relationshipCounts: { [key: string]: number } = {};
 
     // Exclude null values from uniqueRelationships

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 interface FetchDataProps {
-  endpoint: string;  // API endpoint
+  endpoint: string;
   onSuccess: (data: any) => void;
   onFailure: (error: any) => void;
 }
@@ -14,7 +14,7 @@ const FetchData: React.FC<FetchDataProps> = ({
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(endpoint)  // Use the endpoint prop
+    fetch(endpoint) 
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -23,13 +23,13 @@ const FetchData: React.FC<FetchDataProps> = ({
       })
       .then((fetchedData) => {
         setData(fetchedData);
-        onSuccess(fetchedData);  // Call the onSuccess prop
+        onSuccess(fetchedData); 
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);  // Log errors
-        onFailure(error);  // Call the onFailure prop
+        console.error('Error fetching data:', error); 
+        onFailure(error); 
       });
-  }, [endpoint, onSuccess, onFailure]);  // Add them to the dependency array
+  }, [endpoint, onSuccess, onFailure]);
 
   return (
     <div>

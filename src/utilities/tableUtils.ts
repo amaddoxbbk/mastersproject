@@ -1,7 +1,5 @@
-// tableUtils.ts
-
 import { TableData } from "./seatingUtilities";
-import { runGeneticAlgorithm } from './geneticAlgorithm';  // Import the main Genetic Algorithm function
+import { runGeneticAlgorithm } from './geneticAlgorithm';
 
 export const createTableData = (
   guests: any[],

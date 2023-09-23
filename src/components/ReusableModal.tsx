@@ -1,4 +1,3 @@
-// ReusableModal.tsx
 import React from 'react';
 import {
   Modal,
@@ -33,7 +32,7 @@ export const ReusableModal: React.FC<ReusableModalProps> = ({
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {children} {/* This is where the form will be injected */}
+          {children}
         </ModalBody>
         <ModalFooter>
           <Button onClick={handleSubmit}>Submit</Button>

@@ -32,15 +32,14 @@ export const useEvent = (): EventContextProps => {
 };
 
 export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
-  // Initialize state with data from localStorage if available
   const [eventData, setEventData] = useState<EventData>(() => {
-    const savedData = localStorage.getItem("eventData"); // Added this line
-    return savedData ? JSON.parse(savedData) : {}; // Modified this line
+    const savedData = localStorage.getItem("eventData");
+    return savedData ? JSON.parse(savedData) : {};
   });
 
   // Save to localStorage whenever eventData changes
   useEffect(() => {
-    localStorage.setItem("eventData", JSON.stringify(eventData)); // Added this line
+    localStorage.setItem("eventData", JSON.stringify(eventData));
   }, [eventData]);
 
   useEffect(() => {
@@ -48,7 +47,7 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
       .get("/api/getEvents")
       .then((response) => {
         // Only set to default if no eventData is present
-        if (!eventData.event_id && !eventData.event_name) { // Added this line
+        if (!eventData.event_id && !eventData.event_name) {
           setEventData({ event_name: "Default Event", event_id: 0 });
         }
       })

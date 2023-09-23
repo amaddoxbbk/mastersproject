@@ -134,7 +134,7 @@ export const AddCoupleButton: React.FC<AddCoupleButtonProps> = ({
           height={
             fieldErrors.isGroomOne || fieldErrors.isBrideOne ? "auto" : "0"
           }
-          mb={fieldErrors.isGroomOne || fieldErrors.isBrideOne ? 4 : 0} // Conditional bottom margin
+          mb={fieldErrors.isGroomOne || fieldErrors.isBrideOne ? 4 : 0}
         >
           {fieldErrors.isGroomOne && (
             <Box color="red">{fieldErrors.isGroomOne}</Box>
@@ -177,7 +177,7 @@ export const AddCoupleButton: React.FC<AddCoupleButtonProps> = ({
           height={
             fieldErrors.isGroomTwo || fieldErrors.isBrideTwo ? "auto" : "0"
           }
-          mb={fieldErrors.isGroomOne || fieldErrors.isBrideOne ? 4 : 0} // Conditional bottom margin
+          mb={fieldErrors.isGroomOne || fieldErrors.isBrideOne ? 4 : 0}
         >
           {fieldErrors.isGroomTwo && (
             <Box color="red">{fieldErrors.isGroomTwo}</Box>

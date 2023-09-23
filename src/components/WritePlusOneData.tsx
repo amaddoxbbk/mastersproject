@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import axios from "axios"; // Assuming you're using axios for API calls
+import axios from "axios";
 
 interface WritePlusOneDataProps {
   endpoint: string;
@@ -31,7 +31,7 @@ const WritePlusOneData: React.FC<WritePlusOneDataProps> = ({
     writeData();
   }, [endpoint, payload, onSuccess, onFailure]);
 
-  return null; // This component doesn't render anything
+  return null;
 };
 
 export default WritePlusOneData;

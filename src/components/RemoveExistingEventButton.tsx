@@ -25,7 +25,7 @@ export const RemoveExistingEventButton: React.FC<
       return;
     }
 
-    setConfirmRemove(true); // Open the confirmation modal
+    setConfirmRemove(true);
   };
 
   const onConfirmRemove = async () => {
@@ -51,15 +51,15 @@ export const RemoveExistingEventButton: React.FC<
 
       if (response.status === 200) {
         setIsOpenRemove(false);
-        setShouldRefetch(true); // Trigger a refetch to update the list of events
-        setConfirmRemove(false); // Close the confirmation modal
-        setErrorMessage(""); // Reset the error message
-        setConfirmText(""); // Reset the confirm text
+        setShouldRefetch(true);
+        setConfirmRemove(false);
+        setErrorMessage("");
+        setConfirmText("");
       }
     } catch (error) {
       console.error("Error deleting event:", error);
       setErrorMessage("An error occurred while deleting the event.");
-      setConfirmRemove(false); // Close the confirmation modal even if there was an error
+      setConfirmRemove(false); 
     }
   };
 

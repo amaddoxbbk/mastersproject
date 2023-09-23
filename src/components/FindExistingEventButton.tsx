@@ -6,7 +6,7 @@ import GenericDropdown from './GenericDropdown';
 interface FindExistingEventButtonProps {
   handleFindEventSubmit: (searchQuery: string) => void;
   eventOptions: { value: string; label: string }[];
-  style?: React.CSSProperties; // <-- Add this line to include the style prop
+  style?: React.CSSProperties;
 }
 
 export const FindExistingEventButton: React.FC<FindExistingEventButtonProps> = ({ handleFindEventSubmit, eventOptions, style }) => {

@@ -1,4 +1,3 @@
-// removeAllGuests.ts
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import pkg from 'pg';
 const { Pool } = pkg;

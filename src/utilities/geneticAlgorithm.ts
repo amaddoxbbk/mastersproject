@@ -10,7 +10,7 @@ function createRemainingGuestsTableData(
   return generateRandomTable(remainingGuests, sizeNormalTablesNumber);
 }
 
-// Function to select the best parent based on fitness
+// Function to select the best single parent based on fitness
 function selectBestParent(population: TableData[][], fitnessScores: number[]): TableData[] {
   const sortedIndices = fitnessScores.map((score, index) => ({index, score}))
                                      .sort((a, b) => b.score - a.score)
@@ -19,27 +19,24 @@ function selectBestParent(population: TableData[][], fitnessScores: number[]): T
   return bestParent;
 }
 
-// Function to create the next generation solely based on mutations
+// Function to create the next generation based on 'mutations' - in this case pairwise swaps
 function nextGenerationWithMutation(
   bestParent: TableData[],
   populationSize: number,
   remainingGuests: any[],
-  maxTableSize: number  // New parameter here
+  maxTableSize: number
 ): TableData[][] {
   const newGeneration = Array.from({ length: populationSize }, () => JSON.parse(JSON.stringify(bestParent)));
-  return mutate(newGeneration, remainingGuests, maxTableSize);  // Added maxTableSize here
+  return mutate(newGeneration, remainingGuests, maxTableSize);
 }
 
 
-// Main Genetic Algorithm function
 export function runGeneticAlgorithm(
   remainingGuests: any[],
   sizeNormalTablesNumber: number,
   numNormalTableNumber: number,
-  uniqueRelationships: Set<string> // New parameter
+  uniqueRelationships: Set<string>
 ): TableData[] {
-
-  // Initialize population
 
   const numGenerations: number = 25
   const populationSize: number = 1000
@@ -53,7 +50,6 @@ export function runGeneticAlgorithm(
     population.push(newTableData);
   }
 
-  // Main GA loop
   for (let generation = 0; generation < numGenerations; generation++) {
     const fitnessScores = population.map(member => calculateFitness(member, remainingGuests, sizeNormalTablesNumber, uniqueRelationships // New parameter
     )); // 
@@ -61,7 +57,7 @@ export function runGeneticAlgorithm(
 
     const bestParent = selectBestParent(population, fitnessScores);
     
-    // Create next generation but leave one slot for the best parent
+    // Create next generation but leave one slot for the best single parent
     const newGeneration = nextGenerationWithMutation(bestParent, populationSize - 1, remainingGuests, sizeNormalTablesNumber);  // Added sizeNormalTablesNumber here
     
     // Include the best parent to preserve it

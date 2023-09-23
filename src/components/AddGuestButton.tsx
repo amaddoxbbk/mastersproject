@@ -15,7 +15,7 @@ import { ReusableModal } from "./ReusableModal";
 import WriteData from "./WriteData";
 import { useEvent } from "./EventContext";
 import GenericDropdown from "./GenericDropdown";
-import { set, z } from "zod"; // Import Zod
+import { set, z } from "zod";
 
 interface BrideOrGroom {
   name: string;
@@ -131,7 +131,7 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
         !isAlreadyBlacklisted
       );
     })
-    .sort((a, b) => a.attendee_name.localeCompare(b.attendee_name))  // Sorting alphabetically
+    .sort((a, b) => a.attendee_name.localeCompare(b.attendee_name))
     .map((guest) => ({
       value: guest.attendee_id,
       label: guest.attendee_name,
@@ -143,7 +143,6 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
 
   const handleGuestSubmit = () => {
     console.log("handleGuestSubmit called");
-    // Create a copy of the original schema and modify it based on showPlusOne
     const finalGuestSchema = newGuestSchema.refine(
       (data) => {
         if (showPlusOne) {
@@ -153,11 +152,10 @@ export const AddGuestButton: React.FC<AddGuestButtonProps> = ({
       },
       {
         message: "Plus One Name must be at least three characters long",
-        path: ["plusOne"], // specify the fields this refinement is for
+        path: ["plusOne"],
       }
     );
 
-    // Parse the data
     const parsedData = finalGuestSchema.safeParse({
       name,
       plusOne,

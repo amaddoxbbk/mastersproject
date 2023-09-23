@@ -4,7 +4,6 @@ import { ReusableModal } from "./ReusableModal";
 import { z } from "zod";
 import { Stack } from "@chakra-ui/react";
 
-// Define Zod schema
 const newEventSchema = z
   .object({
     eventName: z.string().min(3, "Full event name is required"),
@@ -70,7 +69,7 @@ interface CreateNewEventButtonProps {
     maxSizeNormalTable: number
   ) => void;
   eventOptions: { value: string; label: string }[];
-  style?: React.CSSProperties;  // <-- Add this line to include the style prop
+  style?: React.CSSProperties;
 }
 
 export const CreateNewEventButton: React.FC<CreateNewEventButtonProps> = ({
@@ -175,8 +174,6 @@ export const CreateNewEventButton: React.FC<CreateNewEventButtonProps> = ({
         />
       </FormControl>
 
-
-      {/* Conditionally render Max Size of Top Table */}
       {numTopTables > 0 && (
           <FormControl>
             {fieldErrors.maxSizeTopTable && (

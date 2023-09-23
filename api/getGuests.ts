@@ -11,7 +11,7 @@ const pool = new Pool({
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   try {
-    const { event_id: eventId } = req.body; // Get the event_id from the request body
+    const { event_id: eventId } = req.body;
 
     if (!eventId) {
       res.status(400).json({ error: 'Missing event_id parameter' });

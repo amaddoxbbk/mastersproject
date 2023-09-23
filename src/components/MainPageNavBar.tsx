@@ -1,10 +1,7 @@
-// src/components/PlanBuilderNavBar/PlanBuilderNavBar.tsx
-
 import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { HStack, Button, Text, Show } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useEvent } from "./EventContext";
-import { EditExistingEventButton } from "./EditExistingEventButton";
 import axios from "axios";
 import { ReusableModal } from "./ReusableModal";
 

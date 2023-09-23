@@ -9,7 +9,7 @@ const pool = new Pool({
   }
 });
 
-export default async (req: any, res: any) => { // Use 'any' type for req and res
+export default async (req: any, res: any) => {
   const {
     event_name,
     event_date,

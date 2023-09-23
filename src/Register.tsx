@@ -21,7 +21,7 @@ export const Register = () => {
     { value: string; label: string }[]
   >([]);
   const { eventData, setEventData } = useEvent();
-  const [shouldRefetch, setShouldRefetch] = useState(false); // <-- Add this line
+  const [shouldRefetch, setShouldRefetch] = useState(false);
 
 
   useEffect(() => {
@@ -38,13 +38,10 @@ export const Register = () => {
     numNormalTables: number,
     maxSizeNormalTable: number
   ) => {
-        // Extract the existing event names from eventOptions
         const existingEventNames = eventOptions.map((option) => option.label);
 
-        // Check if event name already exists
         if (existingEventNames.includes(name)) {
           console.error("An event with this name already exists.");
-          // Show an error message to the user, can be a state-based UI message
           return;
         }
     
@@ -65,18 +62,17 @@ export const Register = () => {
     );
 
     if (selectedEvent) {
-      // Update EventContext
       setEventData({
         event_name: selectedEvent.label,
         event_id: parseInt(selectedEvent.value),
-      }); // <-- Update this line
+      });
 
       console.log("Selected event data:", selectedEvent);
       console.log("Updated event context:", {
         event_name: selectedEvent.label,
-        event_id: parseInt(selectedEvent.value), // <-- Update this line
+        event_id: parseInt(selectedEvent.value),
       });
-      navigate("/main"); // Navigate to the main page
+      navigate("/main");
     } else {
       console.error("No matching event found for the given query.");
     }
@@ -98,11 +94,11 @@ export const Register = () => {
         });
     };
   
-    fetchEvents(); // Fetch events initially
+    fetchEvents();
   
     if (shouldRefetch) {
-      fetchEvents(); // Fetch events again if shouldRefetch is true
-      setShouldRefetch(false); // Reset the refetch trigger
+      fetchEvents(); 
+      setShouldRefetch(false);
     }
   }, [shouldRefetch]);
   
